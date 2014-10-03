@@ -79,8 +79,8 @@ DATABASES = {
         'USER': 'eldelosplatos',                      # Not used with sqlite3.
         'PASSWORD': '3ld3l0spl4t0s',                  # Not used with sqlite3.
         'HOST': '',                                # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': '/tmp/mysql.sock',                # Set to empty string for localhost. Not used with sqlite3.
-        #'PORT': '3306',                            # Set to empty string for default. Not used with sqlite3
+        #'HOST': '/tmp/mysql.sock',                # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',                            # Set to empty string for default. Not used with sqlite3
      }
 }
 
