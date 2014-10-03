@@ -1,0 +1,97 @@
+<form id="formulario" method="post" action="/articulo_save/" data-abide="ajax" data-abide>
+    {% csrf_token %} 
+    <div class="row">
+    <div class="large-12 columns">
+        <h2> <span id="titulo_txt"></span> Articulo</h2>
+    </div>
+    </div>
+	<div class="row">
+		<div class="large-3 columns">
+	        <label>C&oacute;digo
+	          {{formulario.codigo}}
+	          <input type="hidden" id="id" name="id" value="{{id}}" />
+	        </label>	
+		</div>
+		<div class="large-9 columns">        
+	        <label>Descripci&oacute;n
+	          {{formulario.descripcion}}         
+	        </label>
+	    </div>  
+	</div>
+	<div class="row">		 
+		<div class="large-4 columns">        
+	        <label>Tipo de Art&iacute;culo
+	          {{formulario.tipoarticulo}}         
+	        </label>
+	    </div>    
+		<div class="large-6 columns">        
+	        <label>Proveedor
+	          {{formulario.marcaarticulo}}         
+	        </label>
+	    </div>    
+		<div class="large-2 columns">        
+	        <label>Medida
+	          {{formulario.unidadmedida}}         
+	        </label>
+	    </div>    
+	</div>
+	<div class="row">	   
+		<div class="large-3 columns">        
+	        <label>Precio Costo
+	          {{formulario.preciocosto}}         
+	        </label>
+	    </div>         
+		<div class="large-3 columns">        
+	        <label>Precio Venta
+	          {{formulario.precioventa}}         
+	        </label>
+	    </div>         
+		<div class="large-3 columns">        
+	        <label>Impuesto
+	          <select name="iva" id="iva">
+	          		<option value="0">0 %</option>
+	          		<option value="8">8 %</option>
+	          		<option value="16">16 %</option>
+	          </select>         
+	        </label>
+	    </div>         
+		<div class="large-3 columns">        
+	        <label>Cantidad
+	          {{formulario.cantidadinventario}}         
+	        </label>
+	    </div>                             
+	</div>
+	<div class="row">
+	  <div class="large-12 columns text-right">	        	     
+	    <button id="btn_save" class="button tiny"> Guardar</button>
+	  </div>
+	</div>
+</form>	
+<script>
+$(document).foundation({
+    reveal: {
+        animation: 'fadeAndPop'
+        }
+});
+
+
+$("#formulario").on('valid',function (){
+  	$("#btn_save").attr('disabled','disabled');
+	var postData = $(this).serializeArray();
+	var formURL = $(this).attr("action");
+	$.ajax({
+	    url : formURL,
+	    type: "POST",
+	    data : postData,
+	    success:function(data, textStatus, jqXHR){
+	    	$("#btn_save").removeAttr('disabled');  
+	        $('#addFrm').foundation('reveal', 'close');
+	        window.location.href="/inventario/"
+	    },
+	    error: function(jqXHR, textStatus, errorThrown) {
+	    	console.log(errorThrown);   
+		}
+	});
+	return false;
+});   
+</script>

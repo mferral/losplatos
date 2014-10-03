@@ -1,0 +1,58 @@
+{% extends 'template.html' %}
+{% block contenido %}
+	<form id="frm_reporte_ventas" action="/reporte_ventas_tbl/" method="post" data-abide="ajax" data-abide>
+		{% csrf_token %} 
+		<div class="large-2 columns">
+			<input type="text" id="fechaini" name="fechaini" placeholder="dd/mm/yyyy" />	
+		</div>
+		<div class="large-2 columns">
+			<input type="text" id="fechafin" name="fechafin" placeholder="dd/mm/yyyy" />
+		</div>
+		<div class="large-1 columns">
+			<input type="text" id="horaini" name="horaini" placeholder="00:00" value="00:00" />
+		</div>
+		<div class="large-1 columns">
+			<input type="text" id="horafin" name="horafin" placeholder="00:00" value="{% now "H:i" %}" />
+		</div>
+		<div class="large-2 columns">
+			<select name="tipo" id="tipo">
+				<option value="1">Ventas</option>
+				<option value="2">Compras</option>
+			</select>
+		</div>		
+		<div class="large-4 columns text-right">
+			<button class="tiny">Generar Reporte</button>
+		</div>	
+	</form>
+	<hr />	
+	
+	<div class="large-12 columns" id="tabla_ventas">
+
+	</div>	
+{% endblock %}
+{% block javascript %}
+	<script>
+	$(".mi-item").removeClass("active");
+	$("#item-reportes").addClass("active");
+	
+	$("#fechaini").datepicker().datepicker("setDate", new Date());
+	$("#fechafin").datepicker().datepicker("setDate", new Date());
+	
+	$("#frm_reporte_ventas").on('valid',function (){
+		var postData = $(this).serializeArray();
+		var formURL = $(this).attr("action");
+		$.ajax({
+		    url : formURL,
+		    type: "POST",
+		    data : postData,
+		    success:function(data, textStatus, jqXHR){
+				$("#tabla_ventas").html(data);
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) {
+		    	console.log(errorThrown);   
+			}
+		});
+		return false;
+	});  	
+	</script>
+{% endblock %}

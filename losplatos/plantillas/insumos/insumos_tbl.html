@@ -1,0 +1,40 @@
+{% load humanize %}
+<table id="tabla" class="large-12 tablesorter">
+  <thead>
+    <tr>
+      <th width="140">Fecha</th>
+      <th width="41%">Tipo de Insumo</th>         
+      <th width="100">Costo</th>
+      <th width="30%">Proveedor</th>
+      <th width="100"></th>
+    </tr>
+  </thead>
+  <tbody>
+	{% for insumo in insumos %}
+	<tr>                                      
+        <td>{{insumo.fecha|date:"SHORT_DATE_FORMAT"}}</td>
+        <td><a href="#" onClick="getFrm({{insumo.id}});">{{insumo.tipoinsumo}}</a></td>               
+        <td>{{insumo.costo|stringformat:"1.2f"|cut:"-"}}</td>
+        <td>{{insumo.proveedor}}</td>
+        <td class="text-center">
+        	<a class="button radius alert tiny" onclick="eliminarInsumo('{{insumo.id}}','{{insumo.tipogasto}}');" style="margin:0px;"><i class="fi-x"></i> Eliminar</a>
+    	</td>       	     	       
+	</tr>
+	{% endfor %}    
+  </tbody>
+  <tfoot>
+	   <tr>
+	    	<td colspan="2"></td>
+	    	<th>{{total}}</th>
+	   		<td colspan="2"></td>
+	   </tr>	  
+  </tfoot>  
+</table>
+<script>
+$("#tabla").tablesorter({
+    headers: {     
+      4: {sorter:false}
+    }
+}); 
+$("#tabla").filterTable();
+</script>

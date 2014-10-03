@@ -1,0 +1,71 @@
+{% load humanize %}
+
+<div class="text-center">
+<h4>Reporte de {{tiporeporte}}</h4> 
+<h6>del {{fechaini}} al {{fechafin}}</h6>
+</div>
+<table>
+	  <thead>
+	    <tr>
+	      <th width="200">C&oacute;digo</th>
+	      <th width="80%">Art&iacute;culo</th>
+	      <th width="">Precio Costo</th>
+	      <th width="">Precio Venta</th>
+	      <th width="">Total</th>
+	      {% if tiporeporte == "Ventas" %}
+	      <th width="">Venta</th>
+	      {% endif %}    
+	      <th width="">Costo</th>
+	      {% if tiporeporte == "Ventas" %}
+	      <th width="">Ganacia</th>	  
+	      {% endif %}    
+	    </tr>
+	  </thead>
+	  <tbody>
+		{% for venta in ventas %}				
+	    <tr>      	    
+	      <td>
+	      	{{venta.codigo}}
+	      </td>
+	      <td>
+	      	{{venta.descripcion}}	
+	      </td>
+	      <td>
+	      	{{venta.preciocosto}}
+	      </td>
+	      <td>
+	      	{{venta.precioventa}}
+	      </td>		      
+	      <td>
+	      	{{venta.total}} 
+	      </td>
+	      {% if tiporeporte == "Ventas" %}
+	      <td>
+	      	{{venta.monto|floatformat:2|intcomma }} 
+	      </td>
+	      {% endif %}    
+	      <td>
+	      	{{venta.costo|floatformat:2|intcomma }} 
+	      </td>	 
+	      {% if tiporeporte == "Ventas" %}     	      	 
+	      <td>
+	      	{{venta.diferencia|floatformat:2|intcomma }} 
+	      </td>	 
+	      {% endif %}      	      	 	      	      	      	      	      
+	    </tr>
+	    {% endfor%}
+	  </tbody>	  
+	  <tfoot>
+	    <tr>
+	    	<td colspan="4"></td>
+	    	<th>{{cantidad}}</th>
+	    	{% if tiporeporte == "Ventas" %}
+	    	<th>{{monto|floatformat:2|intcomma}}</th>
+	    	{% endif %}    
+	    	<th>{{costo|floatformat:2|intcomma}}</th>
+	    	{% if tiporeporte == "Ventas" %}
+	    	<th>{{ganancia|floatformat:2|intcomma}}</th>
+	    	{% endif %} 
+	    </tr>	  
+	  </tfoot>	  
+</table>

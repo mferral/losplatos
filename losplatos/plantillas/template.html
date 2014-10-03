@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title> Los Platos</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <link rel="stylesheet" href="{{STATIC_URL}}css/micss.css">
+    <link rel="stylesheet" href="{{STATIC_URL}}css/foundation.css" />
+    <link rel="stylesheet" href="{{STATIC_URL}}css/flat/zebra_dialog.css" />
+    <link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css" />
+    <link rel="stylesheet" href="{{STATIC_URL}}css/foundation-icons.css" /> 
+    <link rel="stylesheet" href="{{STATIC_URL}}css/tablesorter/style.css" />   
+    
+    <script src="{{STATIC_URL}}js/modernizr.js"></script>
+    
+    <!--<link rel="shortcut icon" href="favicon.ico" />
+    <link href='favicon.ico' rel='shortcut icon' type='image/x-icon'/>
+    <link href='favicon.ico' rel='icon' type='image/x-icon'/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
+    <link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon" />-->
+    
+</head>
+<body>    
+<div class="fixed">      
+<nav class="top-bar" data-topbar>
+<ul class="title-area">
+    <li class="name">
+    	<h1><a href="/"><strong>Los Platos</strong></a></h1>
+    </li>
+	<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+</ul>
+
+<section class="top-bar-section">
+    <!-- Right Nav Section -->
+	<ul class="right">    
+        <li class="mi-item" id="item-articulos"><a href="/inventario/">Inventario</a></li>        
+        <li class="mi-item" id="item-ventas"><a href="/ventas/">Ventas</a></li>                      
+        <li class="mi-item" id="item-compras"><a href="/compras/">Compras</a></li>
+        {% if request.session.tipousuario == "adm" %}          
+        <li class="mi-item" id="item-insumos"><a href="/insumos/">Insumos</a></li>                
+        <li class="mi-item" id="item-gastos"><a href="/gastos/">Gastos</a></li>
+        <li class="mi-item" id="item-reportes"><a href="/reporte_ventas/">Reportes</a></li>
+        {% endif %}
+    	<li class="mi-item"><a href="/login/">Salir</a></li>
+	</ul>                          
+</section>
+</nav> 
+<ul class="breadcrumbs">
+  <li class="unavailable"><a href="#">Usuario: {{request.session.nombre}}</a></li>
+</ul>
+</div>
+{% block contenido %}{% endblock %}	
+   
+<script src="{{STATIC_URL}}js/jquery.js"></script>
+<script src="{{STATIC_URL}}js/foundation.min.js"></script>
+<script src="{{STATIC_URL}}js/foundation/foundation.topbar.js"></script>        
+<script src="{{STATIC_URL}}js/zebra_dialog.js"></script>      
+<script src="{{STATIC_URL}}js/jquery-ui.min.js"></script> 
+<script src="{{STATIC_URL}}js/calendario.js"></script>      
+<script src="{{STATIC_URL}}js/jquery.tablesorter.min.js"></script>
+<script src="{{STATIC_URL}}js/jquery.tablefilter.js"></script>  
+<script>
+  $(document).foundation({reveal: {animation: 'fade'}});
+</script>
+{% block javascript %}{% endblock %}	
+    
+</body>
+</html>

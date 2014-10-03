@@ -1,0 +1,59 @@
+<form id="formulario" method="post" action="/insumos_save/" data-abide="ajax" data-abide>
+    {% csrf_token %} 
+    <div class="large-12 columns">
+        <h2> <span id="titulo_txt"></span> Insumos</h2>
+    </div>
+	<div class="row">
+		<div class="large-9 columns">
+	        <label>Insumo
+	          {{formulario.tipoinsumo}}
+	          
+	          <input type="hidden" id="id" name="id" value="{{id}}" />
+	          <input type="hidden" id="usuario" name="usuario" value="{{request.session.idusuario}}" />
+	        </label>	
+		</div>
+		<div class="large-3 columns">        
+	        <label>Costo
+	        	{{formulario.costo}}         
+	        </label>
+	    </div>    
+		<div class="large-12 columns">        
+	        <label>Proveedor
+	          {{formulario.proveedor}}         
+	        </label>
+	    </div>   	                            
+	</div>
+	<div class="row">
+	  <div class="large-12 columns text-right">	        	     
+	    <button id="btn_save" class="button tiny"> Guardar</button>
+	  </div>
+	</div>
+</form>	
+<script>
+$(document).foundation({
+    reveal: {
+        animation: 'fadeAndPop'
+        }
+});
+
+
+$("#formulario").on('valid',function (){
+  	$("#btn_save").attr('disabled','disabled');
+	var postData = $(this).serializeArray();
+	var formURL = $(this).attr("action");
+	$.ajax({
+	    url : formURL,
+	    type: "POST",
+	    data : postData,
+	    success:function(data, textStatus, jqXHR){
+	    	$("#btn_save").removeAttr('disabled');  
+	        $('#addFrm').foundation('reveal', 'close');
+	        window.location.href="/insumos/"
+	    },
+	    error: function(jqXHR, textStatus, errorThrown) {
+	    	console.log(errorThrown);   
+		}
+	});
+	return false;
+});   
+</script>

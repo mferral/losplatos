@@ -1,0 +1,97 @@
+{% extends 'template.html' %}
+{% block contenido %}
+
+<style>
+#wcont1b {
+    max-height: 400px;
+    height: 400px;
+    overflow-y: scroll;
+}
+i{
+	font-size:14px;
+}
+</style>
+
+<div class="large-12 columns">
+	<input type="text" id="codigo"  placeholder="C&oacute;digo" autofocus autocomplete="off" />
+</div>
+<form action="/ventas_save/" id="frm_venta" method="post" >	
+{% csrf_token %} 
+<div class="large-12 columns">	
+		<div class="panel" id="wcont1b"></div>	
+</div>
+
+<div class="large-12 columns">
+	<div class="panel">
+	<div class="text-right">
+		<h3 id="total">$0.00</h3>
+	</div>	
+	</div>
+</div>
+
+<div class="large-12 columns text-right">
+	<a href="/ventas/" class="button">Nuevo</a>
+	<button>Guardar</button>	
+</div>
+</form>
+
+{% endblock %}
+{% block javascript %}
+<script>
+$(".mi-item").removeClass("active");
+$("#item-ventas").addClass("active");
+
+$("#codigo").keypress(function(e) {	
+    if(e.which == 13) {
+
+        $("#wcont1b").append($("<div>").load("/buscar_codigo/"+$("#codigo").val()));
+    }
+});
+
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+    	$("#codigo").val("");
+    	$("#codigo").focus();   
+    }
+    
+    if (event.keyCode == 115) { // F4
+    	$("#frm_venta").submit();    
+    }    
+};
+
+function total(){
+	var total=0;
+	$("input.precioventa").each(function (index){		
+		var precio=parseFloat($(this).val());
+		total=total+precio		
+	});
+	$("#total").text("$" + total.toFixed(2));
+}
+
+$("#frm_venta").submit(function (){
+  	$("#btn_save").attr('disabled','disabled');
+	var postData = $(this).serializeArray();
+	var formURL = $(this).attr("action");
+	$.ajax({
+	    url : formURL,
+	    type: "POST",
+	    data : postData,
+	    success:function(data, textStatus, jqXHR){
+			window.location.href="/ventas/";
+	    },
+	    error: function(jqXHR, textStatus, errorThrown) {
+	    	console.log(errorThrown);   
+		}
+	});
+	return false;
+});  
+
+function removerArticulo(elemento){
+	$(elemento).parent().parent().remove();
+	total();
+}
+
+</script>
+
+{% endblock %}

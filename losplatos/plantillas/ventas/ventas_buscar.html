@@ -1,0 +1,19 @@
+{% if articulo %}
+		<div class="large-1 columns">
+			<input type="hidden" name="codigo" value="{{articulo.codigo}}" />
+			{{articulo.codigo}}
+		</div>
+		<div class="large-8 columns">
+			{{articulo.descripcion}}
+		</div>
+		<div class="large-2 columns">
+			$ {{articulo.precioventa}}
+			<input type="hidden" value="{{articulo.precioventa}}" class="precioventa" >
+		</div>
+		<div class="large-1 columns">
+			<a class="button tiny alert radius" onclick="removerArticulo(this);" ><i class="fi-x" ></i> </a>
+		</div>							 
+<script>$("#codigo").val("");total();</script>
+{% else %}
+	<script>$("#codigo").select();</script>
+{% endif %}

@@ -1,0 +1,104 @@
+{% extends 'template.html' %}
+{% block contenido %}
+<div id="addFrm" class="reveal-modal medium" data-reveal>    
+    <div id="campos_frm"></div>
+</div>
+
+<div class="">
+		<div class="large-6 columns">
+          		<input type="text"  id="FilterTextBox" name="FilterTextBox"  placeholder="Buscar Art&iacute;culo">
+		</div>
+		<div class="large-6 columns text-right">		  
+			<button class="tiny" onclick="getFrm(0);">Nuevo Art&iacute;culo</button>				
+		</div>
+</div>
+<div class="large-12 columns">	
+<table id="tabla" class="large-12 tablesorter">
+  <thead>
+    <tr>
+      <th width="140">C&oacute;digo</th>
+      <th width="65%">Descripci&oacute;n</th>         
+      <th width="100">Cantidad</th>
+      <th width="100">Precio</th>
+      <!-- <th ></th> --> 
+      {% if request.session.tipousuario == "adm" %}  
+      <th width="100"></th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+	{% for articulo in articulos %}
+	<tr>                                      
+        <td>{{articulo.codigo}}</td>
+        <td>
+        {% if request.session.tipousuario == "adm" %}  
+        <a href="#" onClick="getFrm({{articulo.id}});">{{articulo.descripcion}}</a>
+        {% else %}
+        {{articulo.descripcion}}
+        {% endif %}
+        </td>       
+        <td>{{articulo.cantidadinventario}}</td>
+        <td>{{articulo.precioventa|stringformat:"1.2f"|cut:"-"}}</td>
+        <!-- <td>
+        	<a class="button radius secondary tiny" style="margin:0px;"><i class="fi-wrench"></i> Ajustes</a>
+    	</td>  -->   
+    	{% if request.session.tipousuario == "adm" %}   
+        <td class="text-center">
+        	<a class="button radius alert tiny" onclick="eliminarArticulo('{{articulo.id}}','{{articulo.descripcion}}');" style="margin:0px;"><i class="fi-x"></i> Eliminar</a>
+    	</td>       	     	       
+    	{% endif %}
+	</tr>
+	{% endfor %}    
+  </tbody>
+</table>
+</div>	
+{% endblock %}
+{% block javascript %}
+<script>
+$(document).foundation({
+    reveal: {
+        animation: 'fadeAndPop'
+        }
+});
+
+$(".mi-item").removeClass("active");
+$("#item-articulos").addClass("active");
+
+$("#tabla").tablesorter({
+    headers: {         
+      4: {sorter:false}
+    }
+}); 
+$("#tabla").filterTable();
+
+function getFrm(id){
+	if (id==0){		    
+		$("#campos_frm").load("/articulo_frm/");					  
+	}else{
+	 	$("#campos_frm").load("/articulo_frm/?id="+id);
+	}	 
+	$('#addFrm').foundation('reveal', 'open');
+}  
+  
+function eliminarArticulo(id,desc){
+	$.Zebra_Dialog('<strong>Los Platos</strong>, esta seguro de eliminar el articulo: ' + desc, {
+		    'type':     'question',
+		    'title':    'Pregunta del Sistema',
+		    'buttons':  [
+		                    {caption: 'Yes', callback: function() { 
+		                    	$.get( "/articulo_delete/"+id,function(data){
+		                    		var estado=$.trim(data);
+		                    		if(data==1){
+		                    			window.location.href='/inventario/';
+		                    		}else{
+		                    			new $.Zebra_Dialog('<strong>Los Platos</strong> el articulo no pudo ser eliminado.')
+		                    		}
+		                    	} );
+		                    }},
+		                    {caption: 'No'}
+		                ]
+		});	
+}  
+  
+</script>
+{% endblock %}

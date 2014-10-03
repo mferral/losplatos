@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html class="no-js" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Los Platos</title>
+    <link rel="stylesheet" href="{{STATIC_URL}}css/foundation.min.css" />
+    <link rel="stylesheet" href="{{STATIC_URL}}css/micss.css" />
+    <script src="{{STATIC_URL}}js/modernizr.js"></script>    
+  </head>
+  <body>
+     
+    <div class="row login">
+        <div class="large-3 columns"><br> </div>
+        <div class="large-6 columns">
+            <form id="frmLogin" action="/validar/" method="post" >
+      		{% csrf_token %}
+                  <fieldset>
+                    <legend class="titulo"><span>Los Platos</span><br></legend>
+
+                    <label>
+                      <input type="text" name="usuario" placeholder="Usuario">
+                    </label>
+                    <label>
+                      <input type="password" name="contrasena" placeholder="Contraseña">
+                    </label>
+                    <input type="submit" class="button tiny success radius right" value="ENTRAR">                         
+                    
+                  </fieldset>
+			      <div data-alert id="alerta" style="display:none;"  class="alert-box warning radius">           
+			        <a href="#" class="close">&times;</a>
+			      </div>                    
+            </form>
+        </div>
+        <div class="large-3 columns"><br> </div>
+    </div>  
+      
+    <script src="{{STATIC_URL}}js/jquery.js"></script>
+    <script src="{{STATIC_URL}}js/foundation.min.js"></script>
+    <script>
+      Foundation.global.namespace = '';
+      $(document).foundation();
+    </script>
+<script>
+
+  $("#frmLogin").submit(function(){
+    var postData = $(this).serializeArray();
+    var formURL = $(this).attr("action");
+    $.ajax({
+      url : formURL,
+      type: "POST",
+      data : postData,
+      success:function(data, textStatus, jqXHR){
+        if(data=="1"){
+          window.location="/"  
+        }else{
+          $("#alerta").html(data);
+          $("#alerta").fadeIn("slow");
+          setTimeout(function(){$("#alerta").fadeOut("slow");},3000);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);   
+      }
+    });
+    return false;	 		
+  });
+
+</script>    
+  </body>
+</html>

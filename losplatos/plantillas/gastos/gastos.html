@@ -1,0 +1,125 @@
+{% extends 'template.html' %}
+{% block contenido %}
+<div id="addFrm" class="reveal-modal medium" data-reveal>    
+    <div id="campos_frm"></div>
+</div>
+
+<form id="frm_reporte_gastos" action="/gastos_tbl/" method="post" data-abide="ajax" data-abide>
+    {% csrf_token %} 
+		<div class="large-2 columns">
+			<input type="text" id="fechaini" name="fechaini" placeholder="dd/mm/yyyy" />	
+		</div>
+		<div class="large-2 columns">
+			<input type="text" id="fechafin" name="fechafin" placeholder="dd/mm/yyyy" />
+		</div>
+		<div class="large-4 columns">
+          		<!-- <input type="text"  id="FilterTextBox" name="FilterTextBox"  placeholder="Buscar Gasto"> -->
+		</div>
+		<div class="large-4 columns text-right">
+			<input type="submit" class="tiny button" value="Generar Reporte" >
+			<button class="tiny" onclick="getFrm(0);">Agregar Gasto</button>			
+		</div>
+</form>
+<div class="large-12 columns" id="tabla_gastos">	
+<table id="tabla" class="large-12 tablesorter">
+  <thead>
+    <tr>
+      <th width="140">Fecha</th>
+      <th width="40%">Tipo de Gasto</th>         
+      <th width="100">Costo</th>
+      <th width="30%">Comentarios</th>
+	  <th width="100"></th>
+    </tr>
+  </thead>
+  <tbody>
+	{% for gasto in gastos %}
+	<tr>                                      
+        <td>{{gasto.fecha|date:"SHORT_DATE_FORMAT"}}</td>
+        <td><a href="#" onClick="getFrm({{gasto.id}});">{{gasto.tipogasto}}</a></td>               
+        <td>{{gasto.costo|stringformat:"1.2f"|cut:"-"}}</td>
+        <td>{{gasto.comentarios}}</td>
+        <td class="text-center">
+        	<a class="button radius alert tiny" onclick="eliminarGasto('{{gasto.id}}','{{gasto.tipogasto}}');" style="margin:0px;"><i class="fi-x"></i> Eliminar</a>
+    	</td>       	     	       
+	</tr>
+	{% endfor %}    
+  </tbody>
+  <tfoot>
+	   <tr>
+	    	<td colspan="2"></td>
+	    	<th>{{total}}</th>
+	   		<td colspan="2"></td>
+	   </tr>	  
+  </tfoot>  
+</table>
+</div>	
+{% endblock %}
+{% block javascript %}
+<script>
+$(document).foundation({
+    reveal: {
+        animation: 'fadeAndPop'
+        }
+});
+
+$("#fechaini").datepicker().datepicker("setDate", new Date());
+$("#fechafin").datepicker().datepicker("setDate", new Date());
+
+$(".mi-item").removeClass("active");
+$("#item-gastos").addClass("active");
+
+$("#tabla").tablesorter({
+    headers: {     
+      3: {sorter:false},	
+      4: {sorter:false}
+    }
+}); 
+$("#tabla").filterTable();
+
+function getFrm(id){
+	if (id==0){		    
+		$("#campos_frm").load("/gastos_frm/");					  
+	}else{
+	 	$("#campos_frm").load("/gastos_frm/?id="+id);
+	}	 
+	$('#addFrm').foundation('reveal', 'open');
+}  
+
+$("#frm_reporte_gastos").on('valid',function (){
+	var postData = $(this).serializeArray();
+	var formURL = $(this).attr("action");
+	$.ajax({
+	    url : formURL,
+	    type: "POST",
+	    data : postData,
+	    success:function(data, textStatus, jqXHR){
+			$("#tabla_gastos").html(data);
+	    },
+	    error: function(jqXHR, textStatus, errorThrown) {
+	    	console.log(errorThrown);   
+		}
+	});
+	return false;
+}); 
+  
+function eliminarGasto(id,desc){
+	$.Zebra_Dialog('<strong>Los Platos</strong>, esta seguro de eliminar el gasto: ' + desc, {
+		    'type':     'question',
+		    'title':    'Pregunta del Sistema',
+		    'buttons':  [
+		                    {caption: 'Yes', callback: function() { 
+		                    	$.get( "/gastos_delete/"+id,function(data){
+		                    		var estado=$.trim(data);
+		                    		if(data==1){
+		                    			window.location.href='/gastos/';
+		                    		}
+		                    	} );
+		                    }},
+		                    {caption: 'No'}
+		                ]
+		});	
+}  
+    
+  
+</script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% load humanize %}
+{% load mitemplate %}
+{% if articulo %}
+		<div class="large-1 columns">
+			<input type="hidden" name="articulo{% now "Ymdhms" %}" value="{{articulo.codigo}}" />
+			<input type="hidden" name="codigo" value="{% now "Ymdhms" %}" />
+			{{articulo.codigo}}
+		</div>
+		<div class="large-7 columns">
+			{{articulo.descripcion}}
+		</div>
+		<div class="large-1 columns">
+			{{cantidad}}
+		</div>		
+		<div class="large-1 columns">
+			$ {% precio_impuesto articulo.preciocosto articulo.iva %}	
+		</div>
+		<div class="large-1 columns">
+			$ {{subtotal|floatformat:2|intcomma}}
+			<input type="hidden" name="cantidad{% now "Ymdhms" %}" value="{{cantidad}}" >
+			<input type="hidden" value="{{subtotal}}" class="subtotal" >
+		</div>				
+		<div class="large-1 columns">
+			<a class="button tiny alert radius" onclick="removerArticulo(this);" ><i class="fi-x" ></i> </a>
+		</div>							 
+<script>$("#codigo").val("");$("#cantidad").val("");$("#codigo").focus();total();</script>
+{% else %}
+	<script>$("#codigo").select();</script>
+{% endif %}
