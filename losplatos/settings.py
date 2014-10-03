@@ -101,7 +101,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_ROOT = '/home/losplatos/webapps/losplatos/losplatos/'
+STATIC_ROOT = 'http://losplatos.webfactional.com/'
 
 STATIC_URL = '/static/'
 
