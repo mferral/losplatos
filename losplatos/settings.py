@@ -103,7 +103,7 @@ USE_TZ = True
 
 STATIC_ROOT = '/home/losplatos/webapps/losplatos/losplatos/losplatos/'
 
-STATIC_URL = 'http://losplatos.webfactional.com/static/'
+STATIC_URL = 'http://losplatos.webfactional.com/static'
 
 STATICFILES_DIRS = (
     os.path.join(RUTA_PROYECTO,'static'),
