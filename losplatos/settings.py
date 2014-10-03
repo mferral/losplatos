@@ -101,9 +101,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_ROOT = 'http://losplatos.webfactional.com/'
+STATIC_ROOT = ''
 
-STATIC_URL = '/static/'
+STATIC_URL = 'http://losplatos.webfactional.com//static/'
 
 STATICFILES_DIRS = (
     os.path.join(RUTA_PROYECTO,'static'),
