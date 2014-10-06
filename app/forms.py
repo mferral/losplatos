@@ -24,7 +24,9 @@ class ArticuloForm(forms.ModelForm):
         self.fields['marcaarticulo'].empty_label = None        
         self.fields['marcaarticulo'].queryset = MarcaArticulo.objects.order_by('descripcion')        
         self.fields['unidadmedida'].empty_label = None   
-                              
+    
+    def clean_descripcion(self):
+        return self.cleaned_data['descripcion'].upper()                          
         
 class GastosForm(forms.ModelForm):
     class Meta:
