@@ -27,7 +27,7 @@ class ArticuloForm(forms.ModelForm):
     
     def save(self, force_insert=False, force_update=False):
             self.descripcion = self.descripcion.upper()
-            super(Articulo, self).save(force_insert, force_update)                          
+            super(ArticuloForm, self).save(force_insert, force_update)                          
         
 class GastosForm(forms.ModelForm):
     class Meta:
