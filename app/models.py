@@ -85,7 +85,7 @@ class VentaCompraArticulos(models.Model):
 
     
 class AjustesInventario(models.Model):
-    fecha=models.DateTimeField(default=datetime.datetime.now(),editable=False)
+    fecha=models.DateTimeField(auto_now_add=True,editable=False)      
     cantidadinventario=models.IntegerField()    
     entradasalida=models.BooleanField() # false=entrada true=salida
     tipoajusteinventario=models.ForeignKey(TipoAjusteInventario)
@@ -95,7 +95,7 @@ class AjustesInventario(models.Model):
         return self.articulo.descripcion    
     
 class Gastos(models.Model):
-    fecha=models.DateTimeField(default=datetime.datetime.now(),editable=False)
+    fecha=models.DateTimeField(auto_now_add=True,editable=False)      
     comentarios=models.CharField(max_length=300,blank=True)
     costo=models.DecimalField(max_digits=5, decimal_places=2)
     tipogasto=models.ForeignKey(TipoGasto)
@@ -104,7 +104,7 @@ class Gastos(models.Model):
         return self.tipogasto.descripcion
 
 class Insumos(models.Model):
-    fecha=models.DateTimeField(default=datetime.datetime.now(),editable=False)    
+    fecha=models.DateTimeField(auto_now_add=True,editable=False)          
     costo=models.DecimalField(max_digits=5, decimal_places=2)
     tipoinsumo=models.ForeignKey(TipoInsumo)
     usuario=models.ForeignKey(Usuario)
