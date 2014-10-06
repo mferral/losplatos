@@ -66,7 +66,8 @@ class Articulo(models.Model):
         return self.descripcion      
 
 class VentaCompra(models.Model):
-    fecha=models.DateTimeField(default=datetime.datetime.now(),editable=False)        
+    #fecha=models.DateTimeField(default=datetime.datetime.now(),editable=False)
+    fecha=models.DateTimeField(auto_now_add=True,editable=False)        
     compraventa=models.BooleanField() # false=compra true=venta
     usuario=models.ForeignKey(Usuario)
     def __str__(self):
