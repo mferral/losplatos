@@ -1,7 +1,7 @@
 #encoding:utf-8
 from django import forms
 from django.forms import Textarea
-from app.models import Articulo,Gastos,Insumos,Proveedor,TipoInsumo,TipoGasto,TipoArticulo,MarcaArticulo,UnidadMedida
+from app.models import Articulo,Gastos,Insumos,Proveedor,TipoInsumo,TipoGasto,TipoArticulo,MarcaArticulo
 
 class ArticuloForm(forms.ModelForm):
     class Meta:
@@ -23,7 +23,11 @@ class ArticuloForm(forms.ModelForm):
         self.fields['tipoarticulo'].queryset = TipoArticulo.objects.order_by('descripcion')        
         self.fields['marcaarticulo'].empty_label = None        
         self.fields['marcaarticulo'].queryset = MarcaArticulo.objects.order_by('descripcion')        
-        self.fields['unidadmedida'].empty_label = None                     
+        self.fields['unidadmedida'].empty_label = None   
+    
+    def save(self, force_insert=False, force_update=False):
+            self.descripcion = self.descripcion.upper()
+            super(Articulo, self).save(force_insert, force_update)                          
         
 class GastosForm(forms.ModelForm):
     class Meta:

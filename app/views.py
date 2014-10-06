@@ -48,7 +48,7 @@ def articulo_save(request):
         else:
             articulo=Articulo.objects.get(pk=id_)
             formulario=ArticuloForm(request.POST,instance=articulo)                                
-        if formulario.is_valid():
+        if formulario.is_valid():            
             formulario.save() 
     return HttpResponse("")    
 
