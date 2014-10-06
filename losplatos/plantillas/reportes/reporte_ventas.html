@@ -2,19 +2,19 @@
 {% block contenido %}
 	<form id="frm_reporte_ventas" action="/reporte_ventas_tbl/" method="post" data-abide="ajax" data-abide>
 		{% csrf_token %} 
-		<div class="large-2 medium-2 small-3 columns">
+		<div class="large-2 medium-3 small-6 columns">
 			<input type="text" id="fechaini" name="fechaini" placeholder="dd/mm/yyyy" />	
 		</div>
-		<div class="large-2 medium-2 small-3 columns">
+		<div class="large-2 medium-3 small-6 columns">
 			<input type="text" id="fechafin" name="fechafin" placeholder="dd/mm/yyyy" />
 		</div>
-		<div class="large-1 medium-1 small-3 columns">
+		<div class="large-1 medium-2 small-6 columns">
 			<input type="text" id="horaini" name="horaini" placeholder="00:00" value="00:00" />
 		</div>
-		<div class="large-1 medium-1 small-3 columns">
+		<div class="large-1 medium-2 small-6 columns">
 			<input type="text" id="horafin" name="horafin" placeholder="00:00" value="{% now "H:i" %}" />
 		</div>
-		<div class="large-2 medium-1 small-12 columns">
+		<div class="large-2 medium-2 small-12 columns">
 			<select name="tipo" id="tipo">
 				<option value="1">Ventas</option>
 				<option value="2">Compras</option>
