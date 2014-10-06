@@ -24,10 +24,7 @@ class ArticuloForm(forms.ModelForm):
         self.fields['marcaarticulo'].empty_label = None        
         self.fields['marcaarticulo'].queryset = MarcaArticulo.objects.order_by('descripcion')        
         self.fields['unidadmedida'].empty_label = None   
-    
-    def save(self, force_insert=False, force_update=False):
-            self.descripcion = self.descripcion.upper()
-            super(ArticuloForm, self).save(force_insert, force_update)                          
+                              
         
 class GastosForm(forms.ModelForm):
     class Meta:
