@@ -47,12 +47,11 @@
 	        </label>
 	    </div>         
 		<div class="large-3 columns">        
-	        <label>Impuesto
-	        	{{formulario.iva.value}}
+	        <label>Impuesto	        	
 	          <select name="iva" id="iva">	          
-	          		<option value="0">0 %</option>
-	          		<option value="8">8 %</option>
-	          		<option value="16">16 %</option>
+	          		<option value="0" {% if formulario.iva.value=="0" %}selected{% endif %}>0 %</option>
+	          		<option value="8" {% if formulario.iva.value=="8" %}selected{% endif %}>8 %</option>
+	          		<option value="16"{% if formulario.iva.value=="16" %}selected{% endif %}>16 %</option>
 	          </select>         
 	        </label>
 	    </div>         
