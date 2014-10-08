@@ -32,7 +32,7 @@
         <td>{{articulo.codigo}}</td>
         <td>
         {% if request.session.tipousuario == "adm" %}  
-        <a href="#" onClick="getFrm({{articulo.id}});">{{articulo.descripcion}}</a>
+        <span onClick="getFrm({{articulo.id}});">{{articulo.descripcion}}</span>
         {% else %}
         {{articulo.descripcion}}
         {% endif %}
