@@ -20,7 +20,8 @@
       <th width="65%">Descripci&oacute;n</th>         
       <th width="100">Cantidad</th>
       <th width="100">Precio</th>
-      <!-- <th ></th> --> 
+      <!-- <th ></th> -->
+      <th width="100"></th> 
       {% if request.session.tipousuario == "adm" %}  
       <th width="100"></th>
       {% endif %}
@@ -30,18 +31,17 @@
 	{% for articulo in articulos %}
 	<tr>                                      
         <td>{{articulo.codigo}}</td>
-        <td>
-        {% if request.session.tipousuario == "adm" %}  
-        <span onClick="getFrm({{articulo.id}});">{{articulo.descripcion}}</span>
-        {% else %}
-        {{articulo.descripcion}}
-        {% endif %}
+        <td>       
+        {{articulo.descripcion}}        
         </td>       
         <td>{{articulo.cantidadinventario}}</td>
         <td>{{articulo.precioventa|stringformat:"1.2f"|cut:"-"}}</td>
         <!-- <td>
         	<a class="button radius secondary tiny" style="margin:0px;"><i class="fi-wrench"></i> Ajustes</a>
     	</td>  -->   
+        <td class="text-center">
+        	<a class="button radius tiny" onclick="getFrm({{articulo.id}});" style="margin:0px;"><i class="fi-pencil"></i> Editar</a>
+    	</td>      	
     	{% if request.session.tipousuario == "adm" %}   
         <td class="text-center">
         	<a class="button radius alert tiny" onclick="eliminarArticulo('{{articulo.id}}','{{articulo.descripcion}}');" style="margin:0px;"><i class="fi-x"></i> Eliminar</a>
