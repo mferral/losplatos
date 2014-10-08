@@ -16,21 +16,21 @@
 <table id="tabla" class="large-12 tablesorter">
   <thead>
     <tr>
-      <th width="140">C&oacute;digo</th>
+      <th width="140" class="show-for-medium-up">C&oacute;digo</th>
       <th width="60%">Descripci&oacute;n</th>         
       <th width="100">Cantidad</th>
       <th width="100">Precio</th>
       <!-- <th ></th> -->
-      <th width="100"></th> 
+      <th width="100" class="show-for-medium-up"></th> 
       {% if request.session.tipousuario == "adm" %}  
-      <th width="100"></th>
+      <th width="100" class="show-for-medium-up"></th>
       {% endif %}
     </tr>
   </thead>
   <tbody>
 	{% for articulo in articulos %}
 	<tr>                                      
-        <td>{{articulo.codigo}}</td>
+        <td class="show-for-medium-up">{{articulo.codigo}}</td>
         <td>       
         {{articulo.descripcion}}        
         </td>       
@@ -39,11 +39,11 @@
         <!-- <td>
         	<a class="button radius secondary tiny" style="margin:0px;"><i class="fi-wrench"></i> Ajustes</a>
     	</td>  -->   
-        <td class="text-center">
+        <td class="text-center show-for-medium-up">
         	<a class="button radius tiny" onclick="getFrm({{articulo.id}});" style="margin:0px;"><i class="fi-pencil"></i> Editar</a>
     	</td>      	
     	{% if request.session.tipousuario == "adm" %}   
-        <td class="text-center">
+        <td class="text-center show-for-medium-up">
         	<a class="button radius alert tiny" onclick="eliminarArticulo('{{articulo.id}}','{{articulo.descripcion}}');" style="margin:0px;"><i class="fi-x"></i> Eliminar</a>
     	</td>       	     	       
     	{% endif %}
