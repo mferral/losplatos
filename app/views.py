@@ -218,7 +218,7 @@ def ventas_save(request):
                 try:
                     cant=request.POST['cantidad'+str(codigo)]
                     VentaCompraArticulos.objects.create(ventacompra=venta,articulo=articulo,cantidadinventario=cant,iva=articulo.iva,preciocosto=articulo.preciocosto,precioventa=articulo.precioventa)
-                    articulo.cantidadinventario=articulo.cantidadinventario-1
+                    articulo.cantidadinventario=articulo.cantidadinventario-int(cant)
                     articulo.save()
                 except Exception as e:
                     print e             
