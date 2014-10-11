@@ -16,7 +16,7 @@ i{
 	<input type="text" id="codigo"  placeholder="C&oacute;digo" autofocus autocomplete="off" />
 </div>
 <div class="large-2 columns hide" id="div_cantidad">
-	<input type="text" id="cantidad"  placeholder="Cantidad" autofocus autocomplete="off" value="1" />
+	<input type="text" id="cantidad"  placeholder="Cantidad"  autocomplete="off" value="1" />
 </div>
 	
 {% csrf_token %} 
@@ -46,6 +46,17 @@ $("#item-ventas").addClass("active");
 
 $("#codigo").keypress(function(e) {	
     if(e.which == 13) {
+    	if($("#div_cantidad").hasClass('hide')){
+        	$("#wcont1b").append($("<div>").load("/buscar_codigo/"+$('#cantidad').val()+"/"+$("#codigo").val()));
+    	}else{
+    		$('#cantidad').focus();
+    	}
+        return false;
+    }
+});
+
+$("#cantidad").keypress(function(e) {	
+    if(e.which == 13) {
         $("#wcont1b").append($("<div>").load("/buscar_codigo/"+$('#cantidad').val()+"/"+$("#codigo").val()));
         return false;
     }
@@ -56,24 +67,30 @@ document.onkeydown = function(evt) {
     if (evt.keyCode == 27) {
     	$("#codigo").val("");
     	$("#codigo").focus();   
+    	if($("#div_cantidad").hasClass('hide')){
+    		$("#cantidad").val('1');
+    	}else{
+    		$("#cantidad").val('');
+    	}    	
     }
     
     if (event.keyCode == 115) { // F4
     	$("#frm_venta").submit();    
     }    
     
-    if (event.keyCode == 113) { // F4
+    if (event.keyCode == 113) { // F2
     	if($("#div_cantidad").hasClass('hide')){
     		$('#div_codigo').removeClass('large-12');
     		$('#div_codigo').addClass('large-10');
-    		$('#div_cantidad').removeClass('hide');	
+    		$('#div_cantidad').removeClass('hide');
+        	$('#cantidad').val('');
     	}else{
     		$('#div_codigo').removeClass('large-10');
     		$('#div_codigo').addClass('large-12');
-    		$('#div_cantidad').addClass('hide');    		
+    		$('#div_cantidad').addClass('hide');
+        	$('#cantidad').val('1');
     	}
-    	$('#div_cantidad').val('');
-    	$('#div_codigo').val('');
+    	$('#codigo').val('');
     	$('#div_codigo').focus();    	    
     }       
 };
@@ -85,6 +102,14 @@ function total(){
 		total=total+precio		
 	});
 	$("#total").text("$" + total.toFixed(2));
+	
+	$("#codigo").val("");
+	$("#codigo").focus();
+	if($("#div_cantidad").hasClass('hide')){
+		$("#cantidad").val('1');
+	}else{
+		$("#cantidad").val('');
+	}
 }
 
 $("#frm_venta").submit(function (){
