@@ -3,9 +3,12 @@
 			<input type="hidden" name="codigo" value="{{articulo.codigo}}" />
 			{{articulo.codigo}}
 		</div>
-		<div class="large-7 small-6 columns">
+		<div class="large-6 small-6 columns">
 			{{articulo.descripcion}}
 		</div>
+		<div class="large-1 small-1 columns">
+			{{cantidad}}
+		</div>	
 		<div class="large-2 small-3 columns">
 			$ {{articulo.precioventa}}
 			<input type="hidden" value="{{articulo.precioventa}}" class="precioventa" >
