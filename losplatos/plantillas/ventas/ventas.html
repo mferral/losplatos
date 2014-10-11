@@ -65,7 +65,7 @@ document.onkeydown = function(evt) {
 
 function total(){
 	var total=0;
-	$("input.precioventa").each(function (index){		
+	$("input.subtotal").each(function (index){		
 		var precio=parseFloat($(this).val());
 		total=total+precio		
 	});
