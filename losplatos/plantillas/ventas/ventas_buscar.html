@@ -1,3 +1,4 @@
+{% load humanize %}
 {% if articulo %}
 		<div class="large-2 show-for-large-only columns">
 			<input type="hidden" name="articulo{% now "Ymdhms" %}" value="{{articulo.codigo}}" />
