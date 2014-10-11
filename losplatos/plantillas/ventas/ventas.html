@@ -12,10 +12,10 @@ i{
 }
 </style>
 <form action="/ventas_save/" id="frm_venta" method="post" >
-<div class="large-12 columns">
+<div class="large-12 columns" id="div_codigo">
 	<input type="text" id="codigo"  placeholder="C&oacute;digo" autofocus autocomplete="off" />
 </div>
-<div class="large-2 columns hide">
+<div class="large-2 columns hide" id="div_cantidad">
 	<input type="text" id="cantidad"  placeholder="Cantidad" autofocus autocomplete="off" value="1" />
 </div>
 	
@@ -61,6 +61,21 @@ document.onkeydown = function(evt) {
     if (event.keyCode == 115) { // F4
     	$("#frm_venta").submit();    
     }    
+    
+    if (event.keyCode == 113) { // F4
+    	if($("#div_cantidad").hasClass('hide')){
+    		$('#div_codigo').removeClass('large12');
+    		$('#div_codigo').addClass('large10');
+    		$('#div_cantidad').removeClass('hide');	
+    	}else{
+    		$('#div_codigo').removeClass('large10');
+    		$('#div_codigo').addClass('large12');
+    		$('#div_cantidad').addClass('hide');    		
+    	}
+    	$('#div_cantidad').val('');
+    	$('#div_codigo').val('');
+    	$('#div_codigo').focus();    	    
+    }       
 };
 
 function total(){
