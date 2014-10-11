@@ -74,11 +74,11 @@ document.onkeydown = function(evt) {
     	}    	
     }
     
-    if (event.keyCode == 115) { // F4
+    if (evt.keyCode == 115) { // F4
     	$("#frm_venta").submit();    
     }    
     
-    if (event.keyCode == 113) { // F2
+    if (evt.keyCode == 113) { // F2
     	if($("#div_cantidad").hasClass('hide')){
     		$('#div_codigo').removeClass('large-12');
     		$('#div_codigo').addClass('large-10');
