@@ -214,9 +214,10 @@ def ventas_save(request):
         if len(request.POST.getlist('codigo')) > 0:    
             venta=VentaCompra.objects.create(usuario=u,compraventa=True)
             for codigo in request.POST.getlist('codigo'):
-                articulo=Articulo.objects.get(codigo=codigo)            
+                articulo=Articulo.objects.get(codigo=request.POST['articulo'+str(codigo)])            
                 try:
-                    VentaCompraArticulos.objects.create(ventacompra=venta,articulo=articulo,cantidadinventario=1,iva=articulo.iva,preciocosto=articulo.preciocosto,precioventa=articulo.precioventa)
+                    cant=request.POST['cantidad'+str(codigo)]
+                    VentaCompraArticulos.objects.create(ventacompra=venta,articulo=articulo,cantidadinventario=cant,iva=articulo.iva,preciocosto=articulo.preciocosto,precioventa=articulo.precioventa)
                     articulo.cantidadinventario=articulo.cantidadinventario-1
                     articulo.save()
                 except Exception as e:
