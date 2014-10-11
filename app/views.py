@@ -195,10 +195,11 @@ def insumos_delete(request,idinsumo):
         estado=0
     return HttpResponse(estado)  
 
-def buscar_codigo(request,codigo):
+def buscar_codigo(request,cantidad,codigo):
     try:
         articulo=Articulo.objects.get(codigo=codigo)
-        return render(request,'ventas/ventas_buscar.html',{'articulo':articulo})
+        subtotal=float(cantidad)*float(articulo.precioventa) 
+        return render(request,'ventas/ventas_buscar.html',{'articulo':articulo,'cantidad':cantidad,'subtotal':subtotal})
     except Exception as e:
         print e 
     return render(request,'ventas/ventas_buscar.html')

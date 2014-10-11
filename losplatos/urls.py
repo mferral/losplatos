@@ -28,7 +28,7 @@ urlpatterns = patterns('',
         
     url(r'^ventas/', 'app.views.ventas'),
     url(r'^ventas_save/', 'app.views.ventas_save'),
-    url(r'^buscar_codigo/(?P<codigo>.*)$', 'app.views.buscar_codigo'),
+    url(r'^buscar_codigo/(?P<cantidad>\d+)/(?P<codigo>.*)$', 'app.views.buscar_codigo'),
         
     url(r'^compras/', 'app.views.compras'),
     url(r'^compras_save/', 'app.views.compras_save'),

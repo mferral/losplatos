@@ -11,11 +11,14 @@ i{
 	font-size:14px;
 }
 </style>
-
+<form action="/ventas_save/" id="frm_venta" method="post" >
 <div class="large-12 columns">
 	<input type="text" id="codigo"  placeholder="C&oacute;digo" autofocus autocomplete="off" />
 </div>
-<form action="/ventas_save/" id="frm_venta" method="post" >	
+<div class="large-2 columns hide">
+	<input type="text" id="cantidad"  placeholder="Cantidad" autofocus autocomplete="off" value="1" />
+</div>
+	
 {% csrf_token %} 
 <div class="large-12 columns">	
 		<div class="panel" id="wcont1b"></div>	
@@ -44,7 +47,7 @@ $("#item-ventas").addClass("active");
 $("#codigo").keypress(function(e) {	
     if(e.which == 13) {
 
-        $("#wcont1b").append($("<div>").load("/buscar_codigo/"+$("#codigo").val()));
+        $("#wcont1b").append($("<div>").load("/buscar_codigo/"+$('#cantidad').val()+"/"+$("#codigo").val()));
     }
 });
 
