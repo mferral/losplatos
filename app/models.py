@@ -58,10 +58,10 @@ class Articulo(models.Model):
     iva=models.IntegerField()
     cantidadinventario=models.IntegerField(blank=True, null=True)
     preciocosto=models.DecimalField(max_digits=5, decimal_places=2)
-    precioventa=models.DecimalField(max_digits=5, decimal_places=2)
-    unidadmedida=models.ForeignKey(UnidadMedida)
+    precioventa=models.DecimalField(max_digits=5, decimal_places=2)    
     tipoarticulo=models.ForeignKey(TipoArticulo)
     marcaarticulo=models.ForeignKey(MarcaArticulo)
+    unidadmedida=models.ForeignKey(UnidadMedida)
     def __unicode__(self):
         return self.descripcion      
 
@@ -104,9 +104,11 @@ class Gastos(models.Model):
         return self.tipogasto.descripcion
 
 class Insumos(models.Model):
-    fecha=models.DateTimeField(auto_now_add=True,editable=False)          
+    fecha=models.DateTimeField(auto_now_add=True,editable=False)
+    cantidad=models.IntegerField()          
     costo=models.DecimalField(max_digits=5, decimal_places=2)
     tipoinsumo=models.ForeignKey(TipoInsumo)
+    unidadmedida=models.ForeignKey(UnidadMedida)    
     usuario=models.ForeignKey(Usuario)
     proveedor=models.ForeignKey(Proveedor)
     def __unicode__(self):

@@ -48,6 +48,8 @@ class InsumosForm(forms.ModelForm):
         widgets={
             "tipoinsumo":forms.Select(attrs={'required':'True'}),
             "proveedor":forms.Select(attrs={'required':'True'}),
+            "unidadmedida":forms.Select(attrs={'required':'True'}),
+            "cantidad":forms.TextInput(attrs={'required':'True','pattern':'^\d+$'}),
             "costo":forms.TextInput(attrs={'required':'True','pattern':'^\d+(\.\d{1,2})?$'}),            
         }        
         
