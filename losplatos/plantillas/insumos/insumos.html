@@ -1,5 +1,6 @@
 {% extends 'template.html' %}
 {% block contenido %}
+{% load mitemplate %}
 <div id="addFrm" class="reveal-modal medium" data-reveal>    
     <div id="campos_frm"></div>
 </div>
@@ -25,8 +26,11 @@
   <thead>
     <tr>
       <th width="140">Fecha</th>
-      <th width="41%">Tipo de Insumo</th>         
+      <th width="41%">Tipo de Insumo</th>
+      <th width="100">Cantidad</th>
+      <th width="100">Unidad</th>         
       <th width="100">Costo</th>
+      <th width="100">Total</th>
       <th width="30%">Proveedor</th>
       <th width="100"></th>
     </tr>
@@ -35,8 +39,11 @@
 	{% for insumo in insumos %}
 	<tr>                                      
         <td>{{insumo.fecha|date:"SHORT_DATE_FORMAT"}}</td>
-        <td><a href="#" onClick="getFrm({{insumo.id}});">{{insumo.tipoinsumo}}</a></td>               
+        <td><a href="#" onClick="getFrm({{insumo.id}});">{{insumo.tipoinsumo}}</a></td>
+        <td>{{insumo.cantidad}}</td>
+        <td>{{insumo.unidadmedida}}</td>               
         <td>{{insumo.costo|stringformat:"1.2f"|cut:"-"}}</td>
+        <td class="monto_insumo">{%multiplica insumo.cantidad insumo.costo%}</td>        
         <td>{{insumo.proveedor}}</td>
         <td class="text-center">
         	<a class="button radius alert tiny" onclick="eliminarInsumo('{{insumo.id}}','{{insumo.tipogasto}}');" style="margin:0px;"><i class="fi-x"></i> Eliminar</a>
@@ -46,8 +53,8 @@
   </tbody>
   <tfoot>
 	   <tr>
-	    	<td colspan="2"></td>
-	    	<th>{{total}}</th>
+	    	<td colspan="5"></td>
+	    	<th id="total_insumos"></th>
 	   		<td colspan="2"></td>
 	   </tr>	  
   </tfoot>  
@@ -70,7 +77,7 @@ $("#item-insumos").addClass("active");
 
 $("#tabla").tablesorter({
     headers: {     
-      4: {sorter:false}
+      7: {sorter:false}
     }
 }); 
 $("#tabla").filterTable();
@@ -93,6 +100,7 @@ $("#frm_reporte_insumos").on('valid',function (){
 	    data : postData,
 	    success:function(data, textStatus, jqXHR){
 			$("#tabla_insumos").html(data);
+			total_insumos();
 	    },
 	    error: function(jqXHR, textStatus, errorThrown) {
 	    	console.log(errorThrown);   
@@ -118,7 +126,18 @@ function eliminarInsumo(id,desc){
 		                ]
 		});	
 }  
-    
+  
+function total_insumos(){
+	var total=0;	
+	$(".monto_insumo").each(function (index){		
+		var precio=parseFloat($(this).text());
+		total=total+precio		
+	});
+	$("#total_insumos").text("$" + total.toFixed(2));
+	
+}
+
+total_insumos();
   
 </script>
 {% endblock %}
