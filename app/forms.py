@@ -1,7 +1,7 @@
 #encoding:utf-8
 from django import forms
 from django.forms import Textarea
-from app.models import Articulo,Gastos,Insumos,Proveedor,TipoInsumo,TipoGasto,TipoArticulo,MarcaArticulo
+from app.models import Articulo,Gastos,Insumos,Proveedor,TipoInsumo,TipoGasto,TipoArticulo,MarcaArticulo,UnidadMedida
 
 class ArticuloForm(forms.ModelForm):
     class Meta:
@@ -50,6 +50,7 @@ class InsumosForm(forms.ModelForm):
             "proveedor":forms.Select(attrs={'required':'True'}),
             "unidadmedida":forms.Select(attrs={'required':'True'}),
             "cantidad":forms.TextInput(attrs={'required':'True','pattern':'^\d+$'}),
+            "contenido":forms.TextInput(attrs={'required':'True','pattern':'^\d+$'}),
             "costo":forms.TextInput(attrs={'required':'True','pattern':'^\d+(\.\d{1,2})?$'}),            
         }        
         
@@ -59,3 +60,5 @@ class InsumosForm(forms.ModelForm):
         self.fields['proveedor'].queryset = Proveedor.objects.order_by('descripcion')        
         self.fields['tipoinsumo'].empty_label = None        
         self.fields['tipoinsumo'].queryset = TipoInsumo.objects.order_by('descripcion')
+        self.fields['unidadmedida'].empty_label = None        
+        self.fields['unidadmedida'].queryset = UnidadMedida.objects.order_by('descripcion')        

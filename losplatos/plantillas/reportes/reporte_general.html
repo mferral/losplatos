@@ -1,0 +1,50 @@
+{% extends 'template.html' %}
+{% block contenido %}
+<form id="frm_reporte_insumos" action="/reporte_general_tbl/" method="post" data-abide="ajax" data-abide>
+    {% csrf_token %} 
+		<div class="large-2 columns small-6">
+			<input type="text" id="fechaini" name="fechaini" placeholder="dd/mm/yyyy" />	
+		</div>
+		<div class="large-2 columns small-6">
+			<input type="text" id="fechafin" name="fechafin" placeholder="dd/mm/yyyy" />
+		</div>
+		<div class="large-6 columns">
+          		<!-- <input type="text"  id="FilterTextBox" name="FilterTextBox"  placeholder="Buscar Insumos">  -->
+		</div>
+		<div class="large-2 columns text-right">
+			<input type="submit" class="tiny button small-12" value="Generar Reporte" >				
+		</div>
+</form>
+<div class="large-12 columns" id="tabla_reporte">
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+$(document).foundation();
+
+$("#fechaini").datepicker().datepicker("setDate", new Date());
+$("#fechafin").datepicker().datepicker("setDate", new Date());
+
+$(".mi-item").removeClass("active");
+$("#item-reporte_gral").addClass("active");
+
+$("#tabla").filterTable(); 
+
+$("#frm_reporte_insumos").on('valid',function (){
+	var postData = $(this).serializeArray();
+	var formURL = $(this).attr("action");
+	$.ajax({
+	    url : formURL,
+	    type: "POST",
+	    data : postData,
+	    success:function(data, textStatus, jqXHR){
+			$("#tabla_reporte").html(data);			
+	    },
+	    error: function(jqXHR, textStatus, errorThrown) {
+	    	console.log(errorThrown);   
+		}
+	});
+	return false;
+}); 
+</script>
+{% endblock %}

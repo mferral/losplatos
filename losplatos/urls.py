@@ -36,6 +36,8 @@ urlpatterns = patterns('',
         
     url(r'^reporte_ventas/', 'app.views.reporte_ventas'),
     url(r'^reporte_ventas_tbl/', 'app.views.reporte_ventas_tbl'),
+    url(r'^reporte_general/', 'app.views.reporte_general'),
+    url(r'^reporte_general_tbl/', 'app.views.reporte_general_tbl'),
         
     url(r'^admin/', include(admin.site.urls)),
 )

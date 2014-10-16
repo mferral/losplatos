@@ -86,6 +86,8 @@ def gastos(request):
     fecha_final=datetime.datetime.combine(fechafin,tiempofin)           
     gastos=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final))
     total=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo'))
+    if not total['total']:
+        total['total']=0
     return render(request,'gastos/gastos.html',{'gastos':gastos,'total':total['total']})
 
 def gastos_tbl(request):  
@@ -100,6 +102,8 @@ def gastos_tbl(request):
         fecha_final=datetime.datetime.combine(fechafin,tiempofin)           
         gastos=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final))
         total=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo'))
+        if not total['total']:
+            total['total']=0
     return render(request,'gastos/gastos_tbl.html',{'gastos':gastos,'total':total['total']})
 
 def gastos_save(request):    
@@ -147,8 +151,10 @@ def insumos(request):
     fecha_inicial=datetime.datetime.combine(fechaini,tiempoini)
     fecha_final=datetime.datetime.combine(fechafin,tiempofin)           
     insumos=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final))
-    total=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo'))
-    return render(request,'insumos/insumos.html',{'insumos':insumos,'total':total['total']})
+    total=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo',field="costo*cantidad"))['total']
+    if not total:
+        total=0
+    return render(request,'insumos/insumos.html',{'insumos':insumos,'total':total})
 
 def insumos_tbl(request):  
     if request.POST:        
@@ -161,8 +167,10 @@ def insumos_tbl(request):
         fecha_inicial=datetime.datetime.combine(fechaini,tiempoini)
         fecha_final=datetime.datetime.combine(fechafin,tiempofin)           
         insumos=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final))
-        total=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo'))
-    return render(request,'insumos/insumos_tbl.html',{'insumos':insumos,'total':total['total']})
+        total=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo',field="costo*cantidad"))['total']
+        if not total:
+            total=0        
+    return render(request,'insumos/insumos_tbl.html',{'insumos':insumos,'total':total})
 
 def insumos_save(request):    
     if request.POST:
@@ -280,8 +288,13 @@ def reporte_ventas_tbl(request):
             compraventa=True
             tiporeporte="Ventas"
         ventas=VentaCompra.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).filter(compraventa=compraventa)
+        #7501055308675
+        vca1=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).filter(articulo__codigo='7501055308675').values('articulo__id')
+        
+        print len(vca1)
+        
         vca=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).values('articulo__id','articulo__precioventa','articulo__preciocosto','articulo__iva').annotate(total=Sum('cantidadinventario')).order_by('articulo__descripcion')
-        print fecha_final
+
         items=[]
         ganancia=0
         monto=0
@@ -306,3 +319,37 @@ def reporte_ventas_tbl(request):
             cantidad+=int(item['total'])      
             items.append(item)              
     return render(request,'reportes/reporte_ventas_tbl.html',{'ventas':items,'fechaini':fecha_inicial,'fechafin':fecha_final,'ganancia':ganancia,'monto':monto,'costo':costo,'cantidad':cantidad,'tiporeporte':tiporeporte})
+
+def reporte_general(request):
+    return render(request,'reportes/reporte_general.html')
+
+def reporte_general_tbl(request):  
+    if request.POST:        
+        diaini,mesini,anioini=request.POST['fechaini'].split('/')
+        diafin,mesfin,aniofin=request.POST['fechafin'].split('/')
+        fechaini=datetime.datetime(int(anioini),int(mesini),int(diaini))
+        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))  
+        tiempoini=datetime.time.min
+        tiempofin=datetime.time.max  
+        fecha_inicial=datetime.datetime.combine(fechaini,tiempoini)
+        fecha_final=datetime.datetime.combine(fechafin,tiempofin)                   
+        total_insumos=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo',field="costo*cantidad"))['total']
+        total_gastos=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo'))
+        compras=VentaCompra.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).filter(compraventa=False)
+        total_compras=VentaCompraArticulos.objects.filter(ventacompra__in=compras).aggregate(total=Sum('preciocosto',field="(preciocosto+(preciocosto*(iva*0.01)))*cantidadinventario"))['total']
+        ventas=VentaCompra.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).filter(compraventa=True)
+        total_ventas=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).aggregate(total=Sum('precioventa',field="precioventa*cantidadinventario"))['total']
+        if not total_ventas:
+            total_ventas=0
+        if not total_compras:
+            total_compras=0
+        if not total_gastos['total']:
+            total_gastos['total']=0
+        if not total_insumos:
+            total_insumos=0                        
+        pasivo=float(total_gastos['total'])+float(total_insumos)+float(total_compras)
+        activo=float(total_ventas)
+        ganancia=activo-pasivo
+        print pasivo
+    return render(request,'reportes/reporte_general_tbl.html',{'fechaini':fecha_inicial,'fechafin':fecha_final,'total_gastos':total_gastos['total'],'total_insumos':total_insumos,'total_compras':total_compras,'total_ventas':total_ventas,'pasivo':pasivo,'ganancia':ganancia})
+

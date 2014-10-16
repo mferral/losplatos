@@ -47,6 +47,7 @@ $("#item-ventas").addClass("active");
 $("#codigo").keypress(function(e) {	
     if(e.which == 13) {
     	if($("#div_cantidad").hasClass('hide')){
+    		$("#codigo").attr('disabled','disabled');
         	$("#wcont1b").append($("<div>").load("/buscar_codigo/"+$('#cantidad').val()+"/"+$("#codigo").val()));
     	}else{
     		$('#cantidad').focus();
@@ -57,6 +58,7 @@ $("#codigo").keypress(function(e) {
 
 $("#cantidad").keypress(function(e) {	
     if(e.which == 13) {
+    	$("#codigo").attr('disabled','disabled');
         $("#wcont1b").append($("<div>").load("/buscar_codigo/"+$('#cantidad').val()+"/"+$("#codigo").val()));
         return false;
     }
@@ -97,6 +99,7 @@ document.onkeydown = function(evt) {
 
 function total(){
 	var total=0;
+	$("#codigo").removeAttr('disabled');
 	$("input.subtotal").each(function (index){		
 		var precio=parseFloat($(this).val());
 		total=total+precio		

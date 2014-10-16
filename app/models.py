@@ -1,6 +1,6 @@
 #encoding:utf-8
 from django.db import models
-import datetime
+#import datetime
 
 class TipoUsuario(models.Model):
     clave=models.CharField(max_length=3)
@@ -105,7 +105,8 @@ class Gastos(models.Model):
 
 class Insumos(models.Model):
     fecha=models.DateTimeField(auto_now_add=True,editable=False)
-    cantidad=models.IntegerField()          
+    cantidad=models.IntegerField()        
+    contenido=models.IntegerField()          
     costo=models.DecimalField(max_digits=5, decimal_places=2)
     tipoinsumo=models.ForeignKey(TipoInsumo)
     unidadmedida=models.ForeignKey(UnidadMedida)    

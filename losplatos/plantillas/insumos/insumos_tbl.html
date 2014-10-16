@@ -4,9 +4,10 @@
   <thead>
     <tr>
       <th width="140">Fecha</th>
-      <th width="41%">Tipo de Insumo</th>
+      <th width="30%">Tipo de Insumo</th>
       <th width="100">Cantidad</th>
-      <th width="100">Unidad</th>         
+      <th width="100">Unidad</th>
+      <th width="100">Cont</th>         
       <th width="100">Costo</th>
       <th width="100">Total</th>
       <th width="30%">Proveedor</th>
@@ -19,7 +20,8 @@
         <td>{{insumo.fecha|date:"SHORT_DATE_FORMAT"}}</td>
         <td><a href="#" onClick="getFrm({{insumo.id}});">{{insumo.tipoinsumo}}</a></td>
         <td>{{insumo.cantidad}}</td>
-        <td>{{insumo.unidadmedida}}</td>               
+        <td>{{insumo.unidadmedida}}</td>
+        <td>{{insumo.contenido}}</td>               
         <td>{{insumo.costo|stringformat:"1.2f"|cut:"-"}}</td>
         <td class="monto_insumo">{%multiplica insumo.cantidad insumo.costo%}</td>        
         <td>{{insumo.proveedor}}</td>
@@ -31,8 +33,8 @@
   </tbody>
   <tfoot>
 	   <tr>
-	    	<td colspan="5"></td>
-	    	<th id="total_insumos"></th>
+	    	<td colspan="6"></td>
+	    	<th id="total_insumos">{{total}}</th>
 	   		<td colspan="2"></td>
 	   </tr>	  
   </tfoot>  
@@ -40,7 +42,9 @@
 <script>
 $("#tabla").tablesorter({
     headers: {     
-      7: {sorter:false}
+      8: {sorter:false},
+      3: {sorter:false},
+      4: {sorter:false}
     }
 }); 
 $("#tabla").filterTable();

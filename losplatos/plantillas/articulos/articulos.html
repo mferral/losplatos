@@ -9,7 +9,9 @@
           		<input type="text"  id="FilterTextBox" name="FilterTextBox"  placeholder="Buscar Art&iacute;culo">
 		</div>
 		<div class="large-6 columns text-right show-for-medium-up">		  
-			<button class="tiny" onclick="getFrm(0);">Nuevo Art&iacute;culo</button>				
+			{% if request.session.tipousuario == "adm" or request.session.tipousuario == "cjr" %}
+			<button class="tiny" onclick="getFrm(0);">Nuevo Art&iacute;culo</button>		
+			{% endif %}		
 		</div>
 </div>
 <div class="large-12 columns">	
@@ -21,7 +23,9 @@
       <th width="100">Cantidad</th>
       <th width="100">Precio</th>
       <!-- <th ></th> -->
+      {% if request.session.tipousuario == "adm" or request.session.tipousuario == "cjr" %}
       <th width="100" class="show-for-medium-up"></th> 
+      {% endif %}
       {% if request.session.tipousuario == "adm" %}  
       <th width="100" class="show-for-medium-up"></th>
       {% endif %}
@@ -39,9 +43,11 @@
         <!-- <td>
         	<a class="button radius secondary tiny" style="margin:0px;"><i class="fi-wrench"></i> Ajustes</a>
     	</td>  -->   
+    	{% if request.session.tipousuario == "adm" or request.session.tipousuario == "cjr" %}
         <td class="text-center show-for-medium-up">
         	<a class="button radius tiny" onclick="getFrm({{articulo.id}});" style="margin:0px;"><i class="fi-pencil"></i> Editar</a>
-    	</td>      	
+    	</td>      
+    	{% endif %}	
     	{% if request.session.tipousuario == "adm" %}   
         <td class="text-center show-for-medium-up">
         	<a class="button radius alert tiny" onclick="eliminarArticulo('{{articulo.id}}','{{articulo.descripcion}}');" style="margin:0px;"><i class="fi-x"></i> Eliminar</a>

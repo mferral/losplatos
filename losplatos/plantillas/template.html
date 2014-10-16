@@ -3,7 +3,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title> Los Platos</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     
@@ -41,13 +41,18 @@
 <section class="top-bar-section">
     <!-- Right Nav Section -->
 	<ul class="right">    
-        <li class="mi-item" id="item-articulos"><a href="/inventario/">Inventario</a></li>        
+        <li class="mi-item" id="item-articulos"><a href="/inventario/">Inventario</a></li>
+        {% if request.session.tipousuario == "adm" or request.session.tipousuario == "cjr" %}               
         <li class="mi-item" id="item-ventas"><a href="/ventas/">Ventas</a></li>                      
         <li class="mi-item" id="item-compras"><a href="/compras/">Compras</a></li>
+        {% endif %}
         {% if request.session.tipousuario == "adm" %}          
         <li class="mi-item" id="item-insumos"><a href="/insumos/">Insumos</a></li>                
         <li class="mi-item" id="item-gastos"><a href="/gastos/">Gastos</a></li>
-        <li class="mi-item" id="item-reportes"><a href="/reporte_ventas/">Reportes</a></li>
+        {% endif %}
+        {% if request.session.tipousuario == "adm" or request.session.tipousuario == "rpt" %}
+        <li class="mi-item" id="item-reportes"><a href="/reporte_ventas/">Cortes</a></li>
+        <li class="mi-item" id="item-reporte_gral"><a href="/reporte_general/">Reporte</a></li>
         {% endif %}
     	<li class="mi-item"><a href="/login/">Salir</a></li>
 	</ul>                          
