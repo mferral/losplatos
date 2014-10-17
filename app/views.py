@@ -258,7 +258,7 @@ def compras_save(request):
             for codigo in request.POST.getlist('codigo'):
                 articulo=Articulo.objects.get(codigo=request.POST['articulo'+str(codigo)])
                 #print request.POST['articulo'+str(codigo)]                
-                print articulo.descripcion + ' ' + request.POST['cantidad'+str(codigo)]                                                
+                print articulo.codigo + ' ' + request.POST['cantidad'+str(codigo)]                                                
                 try:                
                     cant=request.POST['cantidad'+str(codigo)]
                     VentaCompraArticulos.objects.create(ventacompra=compra,articulo=articulo,cantidadinventario=cant,iva=articulo.iva,preciocosto=articulo.preciocosto,precioventa=articulo.precioventa)
