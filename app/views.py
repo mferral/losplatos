@@ -205,9 +205,11 @@ def insumos_delete(request,idinsumo):
 
 def buscar_codigo(request,cantidad,codigo):
     try:
+        d = datetime.datetime.now()
+        clave=d.strftime('%H%M%S%f')           
         articulo=Articulo.objects.get(codigo=codigo)
         subtotal=float(cantidad)*float(articulo.precioventa) 
-        return render(request,'ventas/ventas_buscar.html',{'articulo':articulo,'cantidad':cantidad,'subtotal':subtotal})
+        return render(request,'ventas/ventas_buscar.html',{'articulo':articulo,'cantidad':cantidad,'subtotal':subtotal,'clave':clave})
     except Exception as e:
         print e 
     return render(request,'ventas/ventas_buscar.html')
@@ -234,10 +236,12 @@ def ventas_save(request):
 
 def buscar_codigo_compra(request,cantidad,codigo):
     try:        
+        d = datetime.datetime.now()
+        clave=d.strftime('%H%M%S%f')        
         articulo=Articulo.objects.get(codigo=codigo)
         preciocosto=float(articulo.preciocosto)+(float(articulo.preciocosto)*(float(articulo.iva)*0.01))
         subtotal=float(cantidad)*preciocosto        
-        return render(request,'compras/compras_buscar.html',{'articulo':articulo,'cantidad':cantidad,'subtotal':subtotal})
+        return render(request,'compras/compras_buscar.html',{'articulo':articulo,'cantidad':cantidad,'subtotal':subtotal,'clave':clave})
     except Exception as e:
         print e 
     return render(request,'compras/compras_buscar.html')
@@ -252,9 +256,9 @@ def compras_save(request):
         if len(request.POST.getlist('codigo')) > 0:                    
             compra=VentaCompra.objects.create(usuario=u,compraventa=False)
             for codigo in request.POST.getlist('codigo'):
-                print codigo
                 articulo=Articulo.objects.get(codigo=request.POST['articulo'+str(codigo)])
-                print request.POST['cantidad'+str(codigo)]            
+                #print request.POST['articulo'+str(codigo)]                
+                print articulo.descripcion + ' ' + request.POST['cantidad'+str(codigo)]                                                
                 try:                
                     cant=request.POST['cantidad'+str(codigo)]
                     VentaCompraArticulos.objects.create(ventacompra=compra,articulo=articulo,cantidadinventario=cant,iva=articulo.iva,preciocosto=articulo.preciocosto,precioventa=articulo.precioventa)

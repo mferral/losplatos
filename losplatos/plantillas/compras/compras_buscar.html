@@ -2,8 +2,9 @@
 {% load mitemplate %}
 {% if articulo %}
 		<div class="large-2 show-for-large-only columns">
-			<input type="hidden" name="articulo{% now "Ymdhms" %}" value="{{articulo.codigo}}" />
-			<input type="hidden" name="codigo" value="{% now "Ymdhms" %}" />
+			<input type="hidden" name="articulo{{clave}}" value="{{articulo.codigo}}" />
+			<input type="hidden" name="codigo" value="{{clave}}" />
+			<input type="hidden" name="cantidad{{clave}}" value="{{cantidad}}" >
 			{{articulo.codigo}}
 		</div>
 		<div class="large-5 small-6 columns">
@@ -16,8 +17,7 @@
 			$ {% precio_impuesto articulo.preciocosto articulo.iva %}	
 		</div>
 		<div class="large-2 small-2 columns">
-			$ {{subtotal|floatformat:2|intcomma}}
-			<input type="hidden" name="cantidad{% now "Ymdhms" %}" value="{{cantidad}}" >
+			$ {{subtotal|floatformat:2|intcomma}}			
 			<input type="hidden" value="{{subtotal}}" class="subtotal" >
 		</div>				
 		<div class="large-1 small-1 columns">
