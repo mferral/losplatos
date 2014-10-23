@@ -97,7 +97,7 @@ class AjustesInventario(models.Model):
 class Gastos(models.Model):
     fecha=models.DateTimeField(auto_now_add=True,editable=False)      
     comentarios=models.CharField(max_length=300,blank=True)
-    costo=models.DecimalField(max_digits=5, decimal_places=2)
+    costo=models.DecimalField(max_digits=7, decimal_places=2)
     tipogasto=models.ForeignKey(TipoGasto)
     usuario=models.ForeignKey(Usuario)
     def __unicode__(self):
@@ -107,7 +107,7 @@ class Insumos(models.Model):
     fecha=models.DateTimeField(auto_now_add=True,editable=False)
     cantidad=models.IntegerField()        
     contenido=models.IntegerField()          
-    costo=models.DecimalField(max_digits=5, decimal_places=2)
+    costo=models.DecimalField(max_digits=7, decimal_places=2)
     tipoinsumo=models.ForeignKey(TipoInsumo)
     unidadmedida=models.ForeignKey(UnidadMedida)    
     usuario=models.ForeignKey(Usuario)
