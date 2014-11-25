@@ -11,19 +11,19 @@
 		</div>
 		<div class="large-1 small-1 columns">
 			{{cantidad}}
-		</div>	
+		</div>
 		<div class="large-1 small-3 columns">
 			$ {{articulo.precioventa}}
 			<input type="hidden" value="{{articulo.precioventa}}" class="precioventa" >
 		</div>
 		<div class="large-2 small-2 columns">
 			$ {{subtotal|floatformat:2|intcomma}}
-			
+
 			<input type="hidden" value="{{subtotal}}" class="subtotal" >
-		</div>			
+		</div>
 		<div class="large-1 small-3 columns">
 			<a class="button tiny alert radius" onclick="removerArticulo(this);" ><i class="fi-x" ></i> </a>
-		</div>							 
+		</div>
 <script>total();</script>
 {% else %}
 	<script>$("#codigo").removeAttr('disabled');$("#codigo").select();</script>

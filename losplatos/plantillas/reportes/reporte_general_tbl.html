@@ -1,37 +1,63 @@
 {% load humanize %}
-
+{% load mitemplate %}
 <div class="text-center">
-<h3>Reporte General</h3> 
+<h3>Reporte General</h3>
 <h6>del {{fechaini|date:"DATE_FORMAT"}} al {{fechafin|date:"DATE_FORMAT"}}</h6>
 </div>
 <table class="large-12 small-12">
 	<tr>
-	      <td class="large-11 small-10">Gastos</td>
-	      <td class="large-1 small-2 text-right">${{total_gastos|floatformat:2|intcomma}}</td> 
+			<th class="large-11 small-10">Ventas</th>
+			<th class="large-1 small-2 text-right">${{total_ventas|floatformat:2|intcomma}}</th>
+	</tr>
+</table>
+<strong>5 mas vendidos Comida Caliente</strong>
+<table class="large-12 small-12">
+	{% for comida in comida_lst %}
+	<tr>
+		<td class="large-19 small-6">{{comida.articulo__descripcion}}</td>
+		<td class="large-1 small-2 text-right">{{comida.total}}</td>
+		<td class="large-1 small-2 text-right">$ {{comida.precioventa}}</td>
+		<td class="large-1 small-2 text-right">$ {% multiplica comida.total comida.precioventa %}</td>
+	</tr>
+	{% endfor %}
+</table>
+<strong>5 mas vendidos Comida Chatarra</strong>
+<table class="large-12 small-12">
+	{% for snack in snak_lst %}
+	<tr>
+		<td class="large-19 small-6">{{snack.articulo__descripcion}}</td>
+		<td class="large-1 small-2 text-right">{{snack.total}}</td>
+		<td class="large-1 small-2 text-right">$ {{snack.precioventa}}</td>
+		<td class="large-1 small-2 text-right">$ {% multiplica snack.total snack.precioventa %}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+<table class="large-12 small-12">
+	<tr>
+				<td class="large-11 small-10">Compra Comida Chatarra</td>
+				<td class="large-1 small-2 text-right">${{total_compras|floatformat:2|intcomma}}</td>
 	</tr>
 	<tr>
-	      <td class="large-11 small-10">Insumos</td>
-	      <td class="large-1 small-2 text-right">${{total_insumos|floatformat:2|intcomma}}</td> 
+				<td class="large-11 small-10">Compras de Alimentos</td>
+				<td class="large-1 small-2 text-right">${{total_insumos|floatformat:2|intcomma}}</td>
 	</tr>
 	<tr>
-	      <td class="large-11 small-10">Compras</td>
-	      <td class="large-1 small-2 text-right">${{total_compras|floatformat:2|intcomma}}</td> 
+	      <td class="large-11 small-10">Gastos de Operaci&oacute;n</td>
+	      <td class="large-1 small-2 text-right">${{total_gastos|floatformat:2|intcomma}}</td>
 	</tr>
+
+
 	<tr>
 	      <th class="large-11 small-10"></th>
-	      <th class="large-1 small-2 text-right">${{pasivo|floatformat:2|intcomma}}</th> 
-	</tr>							
-</table> 
-<table class="large-12 small-12">
-	<tr>
-	    <th class="large-11 small-10">Ventas</th>
-	    <th class="large-1 small-2 text-right">${{total_ventas|floatformat:2|intcomma}}</th> 
-	</tr>							
+	      <th class="large-1 small-2 text-right">${{pasivo|floatformat:2|intcomma}}</th>
+	</tr>
 </table>
- 
+
+
 <table class="large-12 small-12">
 	<tr>
-		<th class="large-11 small-10">Ganacia</th>
-	    <th class="large-1 small-2 text-right" style="color:{% if ganancia < 0 %}red;{% endif %}{% if ganancia > 0 %}blue;{% endif %}">${{ganancia|floatformat:2|intcomma}}</th> 
-	</tr>							
+		<th class="large-11 small-10">Utilidad</th>
+	    <th class="large-1 small-2 text-right" style="color:{% if ganancia < 0 %}red;{% endif %}{% if ganancia > 0 %}blue;{% endif %}">${{ganancia|floatformat:2|intcomma}}</th>
+	</tr>
 </table>

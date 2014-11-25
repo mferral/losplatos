@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 #identificando la ruta del proyecto
 import os
 RUTA_PROYECTO=os.path.dirname(os.path.realpath(__file__))
+
 URL_BASE='http://localhost:8000/'
-#URL_BASE='http://201.173.156.95:8000/'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -66,7 +67,7 @@ WSGI_APPLICATION = 'losplatos.wsgi.application'
 
 
 TEMPLATE_DIRS = (
-    os.path.join(RUTA_PROYECTO,'plantillas')
+    os.path.join(RUTA_PROYECTO,'plantillas'),
 )
 
 # Database

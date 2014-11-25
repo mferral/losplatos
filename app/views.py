@@ -3,63 +3,63 @@ from django.shortcuts import render
 from app.models import Usuario,Articulo,VentaCompra,VentaCompraArticulos,Gastos,Insumos
 from django.http import HttpResponse
 from app.forms import ArticuloForm,GastosForm,InsumosForm
-import datetime 
+import datetime
 from django.db.models import Q
 from django.db.models import Sum
 
-def index(request):   
+def index(request):
     return render(request,'index.html')
 
-def login(request): 
+def login(request):
     request.session.clear()
-    request.session.flush()      
+    request.session.flush()
     return render(request,'login.html')
 
 def validar(request):
     request.session.clear()
     request.session.flush()
-    if request.POST: 
-        #Guardar bitacora        
-        try:            
+    if request.POST:
+        #Guardar bitacora
+        try:
             u=Usuario.objects.get(usuario=request.POST['usuario'])
             if u.contrasena == request.POST['contrasena']:
                 if u.activo == False:
                     return HttpResponse(u'Usuario Inactivo')
                 else:
                     request.session['nombre']=(u.nombre).title()
-                    request.session['idusuario']=u.id  
-                    request.session['tipousuario']=u.tipousuario.clave                                  
+                    request.session['idusuario']=u.id
+                    request.session['tipousuario']=u.tipousuario.clave
                     return HttpResponse('1')
             else:
                 return HttpResponse(u'La contraseña no coincide')
-        except Usuario.DoesNotExist:        
+        except Usuario.DoesNotExist:
             return HttpResponse('El usuario no existe')
-    return render(request,'login.html')    
+    return render(request,'login.html')
 
-def articulos(request):   
-    articulos=Articulo.objects.all()                
+def articulos(request):
+    articulos=Articulo.objects.all()
     return render(request,'articulos/articulos.html',{'articulos':articulos})
 
-def articulo_save(request):    
+def articulo_save(request):
     if request.POST:
         id_=int(request.POST['id'])
         if id_ == 0:
             formulario = ArticuloForm(request.POST)
         else:
             articulo=Articulo.objects.get(pk=id_)
-            formulario=ArticuloForm(request.POST,instance=articulo)                                
-        if formulario.is_valid():            
-            formulario.save() 
-    return HttpResponse("")    
+            formulario=ArticuloForm(request.POST,instance=articulo)
+        if formulario.is_valid():
+            formulario.save()
+    return HttpResponse("")
 
 def articulo_delete(request,idarticulo):
-    estado=0        
-    try:  
-        estado=1      
+    estado=0
+    try:
+        estado=1
         Articulo.objects.get(pk=idarticulo).delete()
     except:
         estado=0
-    return HttpResponse(estado)   
+    return HttpResponse(estado)
 
 def articulo_frm(request):
     id_=0
@@ -67,56 +67,56 @@ def articulo_frm(request):
         id_=request.GET['id']
         articulo=Articulo.objects.get(pk=id_)
         formulario=ArticuloForm(instance=articulo)
-    else:    
+    else:
         formulario=ArticuloForm()
-    return render(request,'articulos/articulos_frm.html',{'formulario':formulario,'id':id_})   
+    return render(request,'articulos/articulos_frm.html',{'formulario':formulario,'id':id_})
 
-def gastos(request):  
-    if request.POST:        
+def gastos(request):
+    if request.POST:
         diaini,mesini,anioini=request.POST['fechaini'].split('/')
         diafin,mesfin,aniofin=request.POST['fechafin'].split('/')
         fechaini=datetime.datetime(int(anioini),int(mesini),int(diaini))
-        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))  
-    else:    
+        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))
+    else:
         fechaini=datetime.datetime.now()
         fechafin=datetime.datetime.now()
     tiempoini=datetime.time.min
-    tiempofin=datetime.time.max  
+    tiempofin=datetime.time.max
     fecha_inicial=datetime.datetime.combine(fechaini,tiempoini)
-    fecha_final=datetime.datetime.combine(fechafin,tiempofin)           
+    fecha_final=datetime.datetime.combine(fechafin,tiempofin)
     gastos=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final))
     total=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo'))
     if not total['total']:
         total['total']=0
     return render(request,'gastos/gastos.html',{'gastos':gastos,'total':total['total']})
 
-def gastos_tbl(request):  
-    if request.POST:        
+def gastos_tbl(request):
+    if request.POST:
         diaini,mesini,anioini=request.POST['fechaini'].split('/')
         diafin,mesfin,aniofin=request.POST['fechafin'].split('/')
         fechaini=datetime.datetime(int(anioini),int(mesini),int(diaini))
-        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))  
+        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))
         tiempoini=datetime.time.min
-        tiempofin=datetime.time.max  
+        tiempofin=datetime.time.max
         fecha_inicial=datetime.datetime.combine(fechaini,tiempoini)
-        fecha_final=datetime.datetime.combine(fechafin,tiempofin)           
+        fecha_final=datetime.datetime.combine(fechafin,tiempofin)
         gastos=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final))
         total=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo'))
         if not total['total']:
             total['total']=0
     return render(request,'gastos/gastos_tbl.html',{'gastos':gastos,'total':total['total']})
 
-def gastos_save(request):    
+def gastos_save(request):
     if request.POST:
         id_=int(request.POST['id'])
         if id_ == 0:
             formulario = GastosForm(request.POST)
         else:
             gastos=Gastos.objects.get(pk=id_)
-            formulario=GastosForm(request.POST,instance=gastos)                                
+            formulario=GastosForm(request.POST,instance=gastos)
         if formulario.is_valid():
-            formulario.save() 
-    return HttpResponse("")    
+            formulario.save()
+    return HttpResponse("")
 
 def gastos_frm(request):
     id_=0
@@ -124,65 +124,65 @@ def gastos_frm(request):
         id_=request.GET['id']
         gastos=Gastos.objects.get(pk=id_)
         formulario=GastosForm(instance=gastos)
-    else:    
+    else:
         formulario=GastosForm()
-    return render(request,'gastos/gastos_frm.html',{'formulario':formulario,'id':id_})   
+    return render(request,'gastos/gastos_frm.html',{'formulario':formulario,'id':id_})
 
 def gastos_delete(request,idgasto):
-    estado=0        
-    try:  
-        estado=1      
+    estado=0
+    try:
+        estado=1
         Gastos.objects.get(pk=idgasto).delete()
     except:
         estado=0
-    return HttpResponse(estado)   
+    return HttpResponse(estado)
 
-def insumos(request):  
-    if request.POST:        
+def insumos(request):
+    if request.POST:
         diaini,mesini,anioini=request.POST['fechaini'].split('/')
         diafin,mesfin,aniofin=request.POST['fechafin'].split('/')
         fechaini=datetime.datetime(int(anioini),int(mesini),int(diaini))
-        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))  
-    else:    
+        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))
+    else:
         fechaini=datetime.datetime.now()
         fechafin=datetime.datetime.now()
     tiempoini=datetime.time.min
-    tiempofin=datetime.time.max  
+    tiempofin=datetime.time.max
     fecha_inicial=datetime.datetime.combine(fechaini,tiempoini)
-    fecha_final=datetime.datetime.combine(fechafin,tiempofin)           
+    fecha_final=datetime.datetime.combine(fechafin,tiempofin)
     insumos=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final))
     total=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo',field="costo*cantidad"))['total']
     if not total:
         total=0
     return render(request,'insumos/insumos.html',{'insumos':insumos,'total':total})
 
-def insumos_tbl(request):  
-    if request.POST:        
+def insumos_tbl(request):
+    if request.POST:
         diaini,mesini,anioini=request.POST['fechaini'].split('/')
         diafin,mesfin,aniofin=request.POST['fechafin'].split('/')
         fechaini=datetime.datetime(int(anioini),int(mesini),int(diaini))
-        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))  
+        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))
         tiempoini=datetime.time.min
-        tiempofin=datetime.time.max  
+        tiempofin=datetime.time.max
         fecha_inicial=datetime.datetime.combine(fechaini,tiempoini)
-        fecha_final=datetime.datetime.combine(fechafin,tiempofin)           
+        fecha_final=datetime.datetime.combine(fechafin,tiempofin)
         insumos=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final))
         total=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo',field="costo*cantidad"))['total']
         if not total:
-            total=0        
+            total=0
     return render(request,'insumos/insumos_tbl.html',{'insumos':insumos,'total':total})
 
-def insumos_save(request):    
+def insumos_save(request):
     if request.POST:
         id_=int(request.POST['id'])
         if id_ == 0:
             formulario = InsumosForm(request.POST)
         else:
             insumos=Insumos.objects.get(pk=id_)
-            formulario=InsumosForm(request.POST,instance=insumos)                                
+            formulario=InsumosForm(request.POST,instance=insumos)
         if formulario.is_valid():
-            formulario.save() 
-    return HttpResponse("")    
+            formulario.save()
+    return HttpResponse("")
 
 def insumos_frm(request):
     id_=0
@@ -190,88 +190,88 @@ def insumos_frm(request):
         id_=request.GET['id']
         insumo=Insumos.objects.get(pk=id_)
         formulario=InsumosForm(instance=insumo)
-    else:    
+    else:
         formulario=InsumosForm()
-    return render(request,'insumos/insumos_frm.html',{'formulario':formulario,'id':id_})   
+    return render(request,'insumos/insumos_frm.html',{'formulario':formulario,'id':id_})
 
 def insumos_delete(request,idinsumo):
-    estado=0        
-    try:  
-        estado=1      
+    estado=0
+    try:
+        estado=1
         Insumos.objects.get(pk=idinsumo).delete()
     except:
         estado=0
-    return HttpResponse(estado)  
+    return HttpResponse(estado)
 
 def buscar_codigo(request,cantidad,codigo):
     try:
         d = datetime.datetime.now()
-        clave=d.strftime('%H%M%S%f')           
+        clave=d.strftime('%H%M%S%f')
         articulo=Articulo.objects.get(codigo=codigo)
-        subtotal=float(cantidad)*float(articulo.precioventa) 
+        subtotal=float(cantidad)*float(articulo.precioventa)
         return render(request,'ventas/ventas_buscar.html',{'articulo':articulo,'cantidad':cantidad,'subtotal':subtotal,'clave':clave})
     except Exception as e:
-        print e 
+        print e
     return render(request,'ventas/ventas_buscar.html')
 
-def ventas(request):     
+def ventas(request):
     return render(request,'ventas/ventas.html')
 
 def ventas_save(request):
     idusuario=request.session['idusuario']
-    u=Usuario.objects.get(pk=idusuario)  
-    if request.POST:    
-        if len(request.POST.getlist('codigo')) > 0:    
+    u=Usuario.objects.get(pk=idusuario)
+    if request.POST:
+        if len(request.POST.getlist('codigo')) > 0:
             venta=VentaCompra.objects.create(usuario=u,compraventa=True)
             for codigo in request.POST.getlist('codigo'):
-                articulo=Articulo.objects.get(codigo=request.POST['articulo'+str(codigo)])            
+                articulo=Articulo.objects.get(codigo=request.POST['articulo'+str(codigo)])
                 try:
                     cant=request.POST['cantidad'+str(codigo)]
                     VentaCompraArticulos.objects.create(ventacompra=venta,articulo=articulo,cantidadinventario=cant,iva=articulo.iva,preciocosto=articulo.preciocosto,precioventa=articulo.precioventa)
                     articulo.cantidadinventario=articulo.cantidadinventario-int(cant)
                     articulo.save()
                 except Exception as e:
-                    print e             
-    return HttpResponse("")   
+                    print e
+    return HttpResponse("")
 
 def buscar_codigo_compra(request,cantidad,codigo):
-    try:        
+    try:
         d = datetime.datetime.now()
-        clave=d.strftime('%H%M%S%f')        
+        clave=d.strftime('%H%M%S%f')
         articulo=Articulo.objects.get(codigo=codigo)
         preciocosto=float(articulo.preciocosto)+(float(articulo.preciocosto)*(float(articulo.iva)*0.01))
-        subtotal=float(cantidad)*preciocosto        
+        subtotal=float(cantidad)*preciocosto
         return render(request,'compras/compras_buscar.html',{'articulo':articulo,'cantidad':cantidad,'subtotal':subtotal,'clave':clave})
     except Exception as e:
-        print e 
+        print e
     return render(request,'compras/compras_buscar.html')
 
-def compras(request):     
+def compras(request):
     return render(request,'compras/compras.html')
 
 def compras_save(request):
     idusuario=request.session['idusuario']
-    u=Usuario.objects.get(pk=idusuario)  
-    if request.POST:    
-        if len(request.POST.getlist('codigo')) > 0:                    
+    u=Usuario.objects.get(pk=idusuario)
+    if request.POST:
+        if len(request.POST.getlist('codigo')) > 0:
             compra=VentaCompra.objects.create(usuario=u,compraventa=False)
             for codigo in request.POST.getlist('codigo'):
                 articulo=Articulo.objects.get(codigo=request.POST['articulo'+str(codigo)])
-                #print request.POST['articulo'+str(codigo)]                
-                print articulo.codigo + ' ' + request.POST['cantidad'+str(codigo)]                                                
-                try:                
+                #print request.POST['articulo'+str(codigo)]
+                print articulo.codigo + ' ' + request.POST['cantidad'+str(codigo)]
+                try:
                     cant=request.POST['cantidad'+str(codigo)]
                     VentaCompraArticulos.objects.create(ventacompra=compra,articulo=articulo,cantidadinventario=cant,iva=articulo.iva,preciocosto=articulo.preciocosto,precioventa=articulo.precioventa)
                     articulo.cantidadinventario=articulo.cantidadinventario+int(cant)
                     articulo.save()
                 except Exception as e:
-                    print e   
-    return HttpResponse("")   
+                    print e
+    return HttpResponse("")
 
 def reporte_ventas(request):
     return render(request,'reportes/reporte_ventas.html')
 
-def reporte_ventas_tbl(request):    
+def reporte_ventas_tbl(request):
     if request.POST:
         tiporeporte="Compras"
         tipo=request.POST['tipo']
@@ -282,7 +282,7 @@ def reporte_ventas_tbl(request):
         fechaini=datetime.datetime(int(anioini),int(mesini),int(diaini))
         fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))
         #tiempoini=datetime.time.min
-        #tiempofin=datetime.time.max    
+        #tiempofin=datetime.time.max
         tiempoini=datetime.time(int(horaini),int(minini),0)
         tiempofin=datetime.time(int(horafin),int(minfin),0)
         fecha_inicial=datetime.datetime.combine(fechaini,tiempoini)
@@ -294,9 +294,9 @@ def reporte_ventas_tbl(request):
         ventas=VentaCompra.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).filter(compraventa=compraventa)
         #7501055308675
         vca1=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).filter(articulo__codigo='7501055308675').values('articulo__id')
-        
+
         print len(vca1)
-        
+
         vca=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).values('articulo__id','articulo__precioventa','articulo__preciocosto','articulo__iva').annotate(total=Sum('cantidadinventario')).order_by('articulo__descripcion')
 
         items=[]
@@ -316,27 +316,27 @@ def reporte_ventas_tbl(request):
             item['codigo']=articulo.codigo
             item['monto']=float(articulo.precioventa)*float(v['total'])
             item['costo']=preciocosto*float(v['total'])
-            item['diferencia']=float(item['monto'])-float(item['costo'])  
-            ganancia+=float(item['diferencia']) 
+            item['diferencia']=float(item['monto'])-float(item['costo'])
+            ganancia+=float(item['diferencia'])
             monto+=float(item['monto'])
             costo+=float(item['costo'])
-            cantidad+=int(item['total'])      
-            items.append(item)              
+            cantidad+=int(item['total'])
+            items.append(item)
     return render(request,'reportes/reporte_ventas_tbl.html',{'ventas':items,'fechaini':fecha_inicial,'fechafin':fecha_final,'ganancia':ganancia,'monto':monto,'costo':costo,'cantidad':cantidad,'tiporeporte':tiporeporte})
 
 def reporte_general(request):
     return render(request,'reportes/reporte_general.html')
 
-def reporte_general_tbl(request):  
-    if request.POST:        
+def reporte_general_tbl(request):
+    if request.POST:
         diaini,mesini,anioini=request.POST['fechaini'].split('/')
         diafin,mesfin,aniofin=request.POST['fechafin'].split('/')
         fechaini=datetime.datetime(int(anioini),int(mesini),int(diaini))
-        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))  
+        fechafin=datetime.datetime(int(aniofin),int(mesfin),int(diafin))
         tiempoini=datetime.time.min
-        tiempofin=datetime.time.max  
+        tiempofin=datetime.time.max
         fecha_inicial=datetime.datetime.combine(fechaini,tiempoini)
-        fecha_final=datetime.datetime.combine(fechafin,tiempofin)                   
+        fecha_final=datetime.datetime.combine(fechafin,tiempofin)
         total_insumos=Insumos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo',field="costo*cantidad"))['total']
         total_gastos=Gastos.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).aggregate(total=Sum('costo'))
         compras=VentaCompra.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).filter(compraventa=False)
@@ -350,10 +350,12 @@ def reporte_general_tbl(request):
         if not total_gastos['total']:
             total_gastos['total']=0
         if not total_insumos:
-            total_insumos=0                        
+            total_insumos=0
         pasivo=float(total_gastos['total'])+float(total_insumos)+float(total_compras)
         activo=float(total_ventas)
         ganancia=activo-pasivo
-        print pasivo
-    return render(request,'reportes/reporte_general_tbl.html',{'fechaini':fecha_inicial,'fechafin':fecha_final,'total_gastos':total_gastos['total'],'total_insumos':total_insumos,'total_compras':total_compras,'total_ventas':total_ventas,'pasivo':pasivo,'ganancia':ganancia})
-
+        #marca_lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).values('articulo__marcaarticulo__descripcion').annotate(total=Sum('precioventa'))
+        comida_lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).filter(articulo__tipoarticulo__id=8).values('articulo__descripcion','precioventa').annotate(total=Sum('cantidadinventario')).order_by('-total')[:5]
+        #excluir comida
+        snak_lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).exclude(articulo__tipoarticulo__id=8).values('articulo__descripcion','precioventa').annotate(total=Sum('cantidadinventario')).order_by('-total')[:5]
+    return render(request,'reportes/reporte_general_tbl.html',{'fechaini':fecha_inicial,'fechafin':fecha_final,'total_gastos':total_gastos['total'],'total_insumos':total_insumos,'total_compras':total_compras,'total_ventas':total_ventas,'pasivo':pasivo,'ganancia':ganancia,'comida_lst':comida_lst,'snak_lst':snak_lst})
