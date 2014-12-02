@@ -10,29 +10,6 @@
 			<th class="large-1 small-2 text-right">${{total_ventas|floatformat:2|intcomma}}</th>
 	</tr>
 </table>
-<strong>5 mas vendidos Comida Caliente</strong>
-<table class="large-12 small-12">
-	{% for comida in comida_lst %}
-	<tr>
-		<td class="large-19 small-6">{{comida.articulo__descripcion}}</td>
-		<td class="large-1 small-2 text-right">{{comida.total}}</td>
-		<td class="large-1 small-2 text-right">$ {{comida.precioventa}}</td>
-		<td class="large-1 small-2 text-right">$ {% multiplica comida.total comida.precioventa %}</td>
-	</tr>
-	{% endfor %}
-</table>
-<strong>5 mas vendidos Comida Chatarra</strong>
-<table class="large-12 small-12">
-	{% for snack in snak_lst %}
-	<tr>
-		<td class="large-19 small-6">{{snack.articulo__descripcion}}</td>
-		<td class="large-1 small-2 text-right">{{snack.total}}</td>
-		<td class="large-1 small-2 text-right">$ {{snack.precioventa}}</td>
-		<td class="large-1 small-2 text-right">$ {% multiplica snack.total snack.precioventa %}</td>
-	</tr>
-	{% endfor %}
-</table>
-
 <table class="large-12 small-12">
 	<tr>
 				<td class="large-11 small-10">Compra Comida Chatarra</td>
@@ -60,4 +37,60 @@
 		<th class="large-11 small-10">Utilidad</th>
 	    <th class="large-1 small-2 text-right" style="color:{% if ganancia < 0 %}red;{% endif %}{% if ganancia > 0 %}blue;{% endif %}">${{ganancia|floatformat:2|intcomma}}</th>
 	</tr>
+</table>
+
+
+<strong>5 mas vendidos Comida Caliente</strong>
+<table class="large-12 small-12">
+	{% for comida in comida_lst %}
+	<tr>
+		<td class="large-9 small-6">{{comida.articulo__descripcion}}</td>
+		<td class="large-1 small-2 text-right">{{comida.total}}</td>
+		<td class="large-1 small-2 text-right">$ {{comida.precioventa}}</td>
+		<td class="large-1 small-2 text-right">$ {% multiplica comida.total comida.precioventa %}</td>
+	</tr>
+	{% endfor %}
+</table>
+<strong>5 mas vendidos Comida Chatarra</strong>
+<table class="large-12 small-12">
+	{% for snack in snak_lst %}
+	<tr>
+		<td class="large-9 small-6">{{snack.articulo__descripcion}}</td>
+		<td class="large-1 small-2 text-right">{{snack.total}}</td>
+		<td class="large-1 small-2 text-right">$ {{snack.precioventa}}</td>
+		<td class="large-1 small-2 text-right">$ {% multiplica snack.total snack.precioventa %}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+<strong>5 mas vendidos por Marca</strong> <br>
+{% for marcas in marcas_lst %}
+<strong>{{marcas.marca}}</strong>
+<table class="large-12 small-12">
+	{% for art in marcas.top5 %}
+	<tr>
+		<td class="large-19 small-6">{{art.articulo__descripcion}}</td>
+		<td class="large-1 small-2 text-right">{{art.total}}</td>
+		<td class="large-1 small-2 text-right">$ {{art.precioventa}}</td>
+		<td class="large-1 small-2 text-right">$ {% multiplica art.total art.precioventa %}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endfor %}
+
+
+<strong>Inventario por Marcas</strong>
+<table class="large-12 small-12">
+	<tr>
+		<th></th>
+		<th class="text-center">Precio Costo</th>
+		<th class="text-center">Precio Venta</th>
+	</tr>
+	{% for marca in inv_marcas_lst %}
+	<tr>
+		<td class="large-10 small-8">{{marca.marca}}</td>
+		<td class="large-1 small-2 text-right">$ {{marca.total_costo|floatformat:2|intcomma}}</td>
+		<td class="large-1 small-2 text-right">$ {{marca.total_venta|floatformat:2|intcomma}}</td>
+	</tr>
+	{% endfor %}
 </table>

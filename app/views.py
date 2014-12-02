@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
-from app.models import Usuario,Articulo,VentaCompra,VentaCompraArticulos,Gastos,Insumos
+from app.models import Usuario,Articulo,VentaCompra,VentaCompraArticulos,Gastos,Insumos,MarcaArticulo
 from django.http import HttpResponse
 from app.forms import ArticuloForm,GastosForm,InsumosForm
 import datetime
@@ -354,8 +354,61 @@ def reporte_general_tbl(request):
         pasivo=float(total_gastos['total'])+float(total_insumos)+float(total_compras)
         activo=float(total_ventas)
         ganancia=activo-pasivo
-        #marca_lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).values('articulo__marcaarticulo__descripcion').annotate(total=Sum('precioventa'))
+        marcas=MarcaArticulo.objects.all()
+        marcas_lst=[]
+        for marca in marcas:
+            print marca.descripcion
+            item={}
+            item['marca']=marca.descripcion
+            _lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).filter(articulo__marcaarticulo__id=marca.id).values('articulo__descripcion','precioventa').annotate(total=Sum('cantidadinventario')).order_by('-total')[:5]
+            item['top5']=_lst
+            marcas_lst.append(item)
+
+        #total de inventario por marca
+        marcas=MarcaArticulo.objects.all()
+        inv_marcas_lst=[]
+        for marca in marcas:
+            print marca.descripcion
+            item={}
+            item['marca']=marca.descripcion
+            try:
+                total_costo_marca=Articulo.objects.filter(marcaarticulo=marca.id).exclude(cantidadinventario__lte=0).aggregate(total=Sum('preciocosto',field="(preciocosto+(preciocosto*(iva*0.01)))*cantidadinventario"))['total']
+                total_venta_marca=Articulo.objects.filter(marcaarticulo=marca.id).exclude(cantidadinventario__lte=0).aggregate(total=Sum('precioventa',field="precioventa*cantidadinventario"))['total']
+            except Exception as e:
+                print e
+            if not total_costo_marca:
+                total_costo_marca=0
+            if not total_venta_marca:
+                total_venta_marca=0                                
+            item['total_costo']=total_costo_marca
+            item['total_venta']=total_venta_marca
+            inv_marcas_lst.append(item)
+        print inv_marcas_lst
+        '''try:
+                subtotal_marcas_lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).filter(articulo__marcaarticulo_id=marca.id).values('articulo__descripcion','precioventa').annotate(total=Sum('cantidadinventario'))
+                subtotal_marcas=0
+
+                for stm in subtotal_marcas_lst:
+                    subtotal_marcas+=float(stm['precioventa'])*float(stm['precioventa'])
+                print subtotal_marcas
+
+                #.aggregate(total=Sum('precioventa',field="precioventa*cantidadinventario"))
+                #.aggregate(total=Sum('precioventa',field="precioventa*cantidadinventario"))['total']
+            except Exception as e:
+                print e
+
+        try:
+            query_set=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).extra(select={'subtotal':'SUM(precioventa*cantidadinventario)'}).values('articulo__marcaarticulo__descripcion').order_by().annotate(count=Sum("id"))
+
+            print query_set.query
+            print query_set
+            #filter(ventacompra__in=ventas)
+            #for marca in marca_lst:
+            #    print marca
+        except Exception as e:
+            print e
+        '''
         comida_lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).filter(articulo__tipoarticulo__id=8).values('articulo__descripcion','precioventa').annotate(total=Sum('cantidadinventario')).order_by('-total')[:5]
         #excluir comida
         snak_lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).exclude(articulo__tipoarticulo__id=8).values('articulo__descripcion','precioventa').annotate(total=Sum('cantidadinventario')).order_by('-total')[:5]
-    return render(request,'reportes/reporte_general_tbl.html',{'fechaini':fecha_inicial,'fechafin':fecha_final,'total_gastos':total_gastos['total'],'total_insumos':total_insumos,'total_compras':total_compras,'total_ventas':total_ventas,'pasivo':pasivo,'ganancia':ganancia,'comida_lst':comida_lst,'snak_lst':snak_lst})
+    return render(request,'reportes/reporte_general_tbl.html',{'fechaini':fecha_inicial,'fechafin':fecha_final,'total_gastos':total_gastos['total'],'total_insumos':total_insumos,'total_compras':total_compras,'total_ventas':total_ventas,'pasivo':pasivo,'ganancia':ganancia,'comida_lst':comida_lst,'snak_lst':snak_lst,'marcas_lst':marcas_lst,'inv_marcas_lst':inv_marcas_lst})
