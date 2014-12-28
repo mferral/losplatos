@@ -343,6 +343,21 @@ def reporte_general_tbl(request):
         total_compras=VentaCompraArticulos.objects.filter(ventacompra__in=compras).aggregate(total=Sum('preciocosto',field="(preciocosto+(preciocosto*(iva*0.01)))*cantidadinventario"))['total']
         ventas=VentaCompra.objects.filter(Q(fecha__gte=fecha_inicial) & Q(fecha__lte=fecha_final)).filter(compraventa=True)
         total_ventas=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).aggregate(total=Sum('precioventa',field="precioventa*cantidadinventario"))['total']
+        tvc=0
+        tvs=0 
+        try:
+            total_ventas_comida=VentaCompraArticulos.objects.filter(articulo__tipoarticulo__id=8).filter(ventacompra__in=ventas)
+            for art in total_ventas_comida:
+                tvc+=float(art.precioventa)*float(art.cantidadinventario)
+            print tvc   
+        except Exception as e:
+            print e
+        try:
+            total_ventas_snack=VentaCompraArticulos.objects.exclude(articulo__tipoarticulo__id=8).filter(ventacompra__in=ventas)            
+            for art in total_ventas_snack:
+                tvs+=float(art.precioventa)*float(art.cantidadinventario)
+        except Exception as e:
+            print e                        
         if not total_ventas:
             total_ventas=0
         if not total_compras:
@@ -411,4 +426,4 @@ def reporte_general_tbl(request):
         comida_lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).filter(articulo__tipoarticulo__id=8).values('articulo__descripcion','precioventa').annotate(total=Sum('cantidadinventario')).order_by('-total')[:5]
         #excluir comida
         snak_lst=VentaCompraArticulos.objects.filter(ventacompra__in=ventas).exclude(articulo__tipoarticulo__id=8).values('articulo__descripcion','precioventa').annotate(total=Sum('cantidadinventario')).order_by('-total')[:5]
-    return render(request,'reportes/reporte_general_tbl.html',{'fechaini':fecha_inicial,'fechafin':fecha_final,'total_gastos':total_gastos['total'],'total_insumos':total_insumos,'total_compras':total_compras,'total_ventas':total_ventas,'pasivo':pasivo,'ganancia':ganancia,'comida_lst':comida_lst,'snak_lst':snak_lst,'marcas_lst':marcas_lst,'inv_marcas_lst':inv_marcas_lst})
+    return render(request,'reportes/reporte_general_tbl.html',{'fechaini':fecha_inicial,'fechafin':fecha_final,'total_gastos':total_gastos['total'],'total_insumos':total_insumos,'total_compras':total_compras,'total_ventas':total_ventas,'pasivo':pasivo,'ganancia':ganancia,'comida_lst':comida_lst,'snak_lst':snak_lst,'marcas_lst':marcas_lst,'inv_marcas_lst':inv_marcas_lst,'tvc':tvc,'tvs':tvs})

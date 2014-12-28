@@ -6,7 +6,15 @@
 </div>
 <table class="large-12 small-12">
 	<tr>
-			<th class="large-11 small-10">Ventas</th>
+			<td class="large-11 small-10">Ventas Comida</td>
+			<td class="large-1 small-2 text-right">${{tvc|floatformat:2|intcomma}}</td>
+	</tr>
+	<tr>
+			<td class="large-11 small-10">Ventas Snack</td>
+			<td class="large-1 small-2 text-right">${{tvs|floatformat:2|intcomma}}</td>
+	</tr>	
+	<tr>
+			<th class="large-11 small-10">Ventas Totales</th>
 			<th class="large-1 small-2 text-right">${{total_ventas|floatformat:2|intcomma}}</th>
 	</tr>
 </table>
