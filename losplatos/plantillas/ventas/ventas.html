@@ -59,7 +59,7 @@ $("#codigo").keypress(function(e) {
 $("#cantidad").keypress(function(e) {	
     if(e.which == 13) {
     	$("#codigo").attr('disabled','disabled');
-        $("#wcont1b").append($("<div>").load("/buscar_codigo/"+$('#cantidad').val()+"/"+$("#codigo").val()));
+        $("#wcont1b").append($("<div class='fila'>").load("/buscar_codigo/"+$('#cantidad').val()+"/"+$("#codigo").val()));
         return false;
     }
 });
@@ -124,7 +124,8 @@ $("#frm_venta").submit(function (){
 	    type: "POST",
 	    data : postData,
 	    success:function(data, textStatus, jqXHR){
-			window.location.href="/ventas/";
+	    		getVenta(); 
+			//window.location.href="/ventas/";
 	    },
 	    error: function(jqXHR, textStatus, errorThrown) {
 	    	console.log(errorThrown);   
@@ -139,5 +140,8 @@ function removerArticulo(elemento){
 }
 
 </script>
+<script src="https://demo.qz.io/js/3rdparty/deployJava.js"></script>
+<script src="https://demo.qz.io/js/qz-websocket.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/29660729/miniprinter.js"></script>
 
 {% endblock %}
