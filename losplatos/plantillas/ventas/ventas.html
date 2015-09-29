@@ -48,7 +48,7 @@ $("#codigo").keypress(function(e) {
     if(e.which == 13) {
     	if($("#div_cantidad").hasClass('hide')){
     		$("#codigo").attr('disabled','disabled');
-        	$("#wcont1b").append($("<div>").load("/buscar_codigo/"+$('#cantidad').val()+"/"+$("#codigo").val()));
+        	$("#wcont1b").append($("<div class='fila'>").load("/buscar_codigo/"+$('#cantidad').val()+"/"+$("#codigo").val()));
     	}else{
     		$('#cantidad').focus();
     	}
