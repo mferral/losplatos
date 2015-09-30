@@ -34,7 +34,8 @@ i{
 
 <div class="large-12 columns text-right">
 	<a href="/ventas/" class="button">Nuevo</a>
-	<button id="btn_save">Guardar</button>	
+	<button id="btn_print" valor="0">Imprimir</button>
+	<button id="btn_save" valor="1">Guardar</button>	
 </div>
 </form>
 
@@ -116,7 +117,9 @@ function total(){
 }
 
 $("#frm_venta").submit(function (){
-  	$("#btn_save").attr('disabled','disabled');
+	var btn=$(document.activeElement);
+	var valor=parseInt(btn.attr("valor"));
+  	btn.attr('disabled','disabled');
 	var postData = $(this).serializeArray();
 	var formURL = $(this).attr("action");
 	$.ajax({
@@ -124,8 +127,12 @@ $("#frm_venta").submit(function (){
 	    type: "POST",
 	    data : postData,
 	    success:function(data, textStatus, jqXHR){
-	    		getVenta(); 
-			//window.location.href="/ventas/";
+	    		if(valor==1){
+	    			window.location.href="/ventas/";
+	    		}else{
+	    			getVenta(); 
+	    		}
+			
 	    },
 	    error: function(jqXHR, textStatus, errorThrown) {
 	    	console.log(errorThrown);   
