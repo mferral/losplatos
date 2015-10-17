@@ -22,6 +22,7 @@
       <th width="140" class="show-for-medium-up">C&oacute;digo</th>
       <th width="60%">Descripci&oacute;n</th>
       <th width="100">Cantidad</th>
+      <th width="100">Costo</th>
       <th width="100">Precio</th>
       <!-- <th ></th> -->
       {% if request.session.tipousuario == "adm" or request.session.tipousuario == "cjr" %}
@@ -40,6 +41,7 @@
         {{articulo.descripcion}}
         </td>
         <td>{{articulo.cantidadinventario}}</td>
+        <td>{%articulo.preciocosto%}</td>
         <td>{% precio_impuesto articulo.preciocosto articulo.iva%}</td>
 <!--        <td>{{articulo.precioventa|stringformat:"1.2f"|cut:"-"}}</td>
         <td>{% porcentaje_ganancia articulo.precioventa articulo.preciocosto articulo.iva%} %</td>
