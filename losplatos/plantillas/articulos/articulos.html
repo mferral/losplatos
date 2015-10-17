@@ -41,7 +41,7 @@
         {{articulo.descripcion}}
         </td>
         <td>{{articulo.cantidadinventario}}</td>
-        <td>{%articulo.preciocosto%}</td>
+        <td>{{articulo.preciocosto}}</td>
         <td>{% precio_impuesto articulo.preciocosto articulo.iva%}</td>
 <!--        <td>{{articulo.precioventa|stringformat:"1.2f"|cut:"-"}}</td>
         <td>{% porcentaje_ganancia articulo.precioventa articulo.preciocosto articulo.iva%} %</td>
