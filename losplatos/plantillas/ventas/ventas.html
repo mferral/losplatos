@@ -78,8 +78,14 @@ document.onkeydown = function(evt) {
     }
     
     if (evt.keyCode == 115) { // F4
-    	$("#btn_save[valor=1]").trigger('click');    
+    	$("#btn_save").focus().click();
+    	//$("#btn_save[valor=1]").trigger('click');    
     }    
+    
+    if (evt.keyCode == 114) { // F4
+    	$("#btn_print").focus().click();
+    	//$("#btn_save[valor=1]").trigger('click');    
+    }        
     
     if (evt.keyCode == 113) { // F2
     	if($("#div_cantidad").hasClass('hide')){
